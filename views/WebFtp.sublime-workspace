@@ -1,0 +1,616 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"pa",
+				"path"
+			],
+			[
+				"ftp",
+				"ftpUrl"
+			],
+			[
+				"data",
+				"dataset"
+			],
+			[
+				"parent",
+				"parentNode"
+			],
+			[
+				"da",
+				"data"
+			],
+			[
+				"div",
+				"divGlyphicon"
+			],
+			[
+				"fir",
+				"firtChildNode"
+			],
+			[
+				"Ftp",
+				"FtpUser"
+			],
+			[
+				"get",
+				"getPeerCertificate"
+			],
+			[
+				"_data",
+				"_dataSocket"
+			],
+			[
+				"add",
+				"addEvents"
+			],
+			[
+				"ad",
+				"addEvents"
+			],
+			[
+				"it",
+				"item"
+			],
+			[
+				"dat",
+				"dataArray"
+			],
+			[
+				"cmd",
+				"cmdSocket"
+			],
+			[
+				"on",
+				"onconnect"
+			],
+			[
+				"cm",
+				"cmdSocket"
+			],
+			[
+				"con",
+				"config"
+			],
+			[
+				"btn",
+				"btn-primary"
+			],
+			[
+				"call",
+				"callback"
+			],
+			[
+				"l",
+				"log"
+			],
+			[
+				"de",
+				"derivedKey"
+			],
+			[
+				"nick",
+				"Nick"
+			],
+			[
+				"style",
+				"stylesheet"
+			],
+			[
+				"pot",
+				"portHttp"
+			],
+			[
+				"ca",
+				"callback"
+			],
+			[
+				"socket",
+				"socketEventsListers"
+			],
+			[
+				"st",
+				"style"
+			],
+			[
+				"req",
+				"require"
+			],
+			[
+				"so",
+				"socketEventsListers"
+			],
+			[
+				"t",
+				"target"
+			],
+			[
+				"re",
+				"res"
+			],
+			[
+				"IP",
+				"IP"
+			],
+			[
+				"res",
+				"result"
+			],
+			[
+				"writ",
+				"writeHead"
+			],
+			[
+				"postDa",
+				"postDataChunk"
+			],
+			[
+				"co",
+				"Content"
+			],
+			[
+				"e",
+				"exec"
+			],
+			[
+				"fun",
+				"function"
+			],
+			[
+				"response",
+				"response"
+			],
+			[
+				"inc",
+				"include"
+			],
+			[
+				"va",
+				"value"
+			],
+			[
+				"p",
+				"padding-left"
+			],
+			[
+				"b",
+				"background"
+			],
+			[
+				"color",
+				"colorbox"
+			],
+			[
+				"ge",
+				"getElementById"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "index.jade",
+			"settings":
+			{
+				"buffer_size": 1939,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Git/WebFtp/public/bootstrap/css/bootstrap-theme.css",
+			"settings":
+			{
+				"buffer_size": 16819,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Git/WebFtp/public/scripts/functions.js",
+			"settings":
+			{
+				"buffer_size": 5729,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				"Snippet: ",
+				"Snippet: Bootstrap basic four column grid"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"packa",
+				"Preferences: Browse Packages"
+			],
+			[
+				"pack",
+				"Preferences: Browse Packages"
+			]
+		],
+		"width": 521.0
+	},
+	"console":
+	{
+		"height": 125.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Git/WebFtp/views/index.jade",
+		"/Git/WebTests/views/index.jade",
+		"/Git/WebTests/public/javascripts/script.js",
+		"/Git/WebTests/views/layout.jade",
+		"/Git/WebFtp/public/scripts/functions.js",
+		"/Git/WebFtp/views/layout.jade",
+		"/Git/WebTests/public/bootstrap/css/bootstrap.css",
+		"/Git/WebTests/public/stylesheets/style.css",
+		"/Git/WebFtp/public/bootstrap/js/updateFtp.js",
+		"/Git/WebFtp/public/bootstrap/js/tree.js",
+		"/Git/WebFtp/app.js",
+		"/Git/WebFtp/public/bootstrap/css/tree.css",
+		"/Git/WebFtp/routes/socket.js",
+		"/Git/WebFtp/routes/ftp.js",
+		"/Git/WebFtp/storedFtp.json",
+		"/Git/WebFtp/backup",
+		"/Git/WebFtp/routes/index.js",
+		"/Git/WebFtp/package.json",
+		"/Git/WebWol/app.js",
+		"/Git/WebWol/routes/socket.js",
+		"/Git/WebWol/public/scripts/functions.js",
+		"/Git/WebWol/views/config.jade",
+		"/Git/WebWol/views/index.jade",
+		"/Git/WebFtp/public/js/jquery.min.js",
+		"/usr/bin/wol.py",
+		"/Git/WebFtp/public/less/bootstrap-tree.less",
+		"/Git/WebFtp/public/javascripts/bootstrap-tree.js",
+		"/Git/WebFtp/public/css/bootstrap-tree.css",
+		"/Git/WebFtp/public/less/style.less",
+		"/Git/WebFtp/node_modules/ftp/lib/connection.js",
+		"/Git/WebFtp/server.pem",
+		"/usr/sbin/arp",
+		"/Git/WebWol/routes/arp.js",
+		"/Users/holymoly/Downloads/net2ftp_v1.0/files_to_upload/index.php",
+		"/private/tmp/wol.err",
+		"/private/tmp/wol.out",
+		"/Volumes/home/WebFtp/routes/ftpClient.js",
+		"/Volumes/home/WebFtp/server-cert.pem",
+		"/Volumes/home/WebFtp socket standard/routes/ftpClient.js",
+		"/Volumes/home/LogIn/views/layout.jade",
+		"/Volumes/home/WebWol/views/config.jade",
+		"/Volumes/home/LogIn/app.js",
+		"/Volumes/home/LogIn/routes/user.js",
+		"/Volumes/home/LogIn/views/index.jade",
+		"/Volumes/home/LogIn/examples/treeExample.html",
+		"/Volumes/home/LogIn/public/bootstrap/js/tree.js",
+		"/Volumes/home/LogIn/public/bootstrap/css/tree.css",
+		"/Volumes/home/LogIn/routes/db.js",
+		"/Volumes/home/WebWol/config.json",
+		"/Volumes/Home Directory/node-bootstrap/WebWol/views/layout.jade",
+		"/Volumes/Home Directory/node-bootstrap/WebWol/views/config.jade",
+		"/Volumes/Home Directory/node-bootstrap/WebWol/public/bootstrap/js/json-menu.js",
+		"/Users/holymoly/Downloads/mityalebedev-jbdm-affffb5/menu.json",
+		"/Volumes/Home Directory/node-bootstrap/WebWol/routes/db.js",
+		"/Users/holymoly/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Volumes/Home Directory/node-bootstrap/WebWol/routes/wol.js",
+		"/Volumes/Home Directory/node-bootstrap/nodebootstrap/app.js",
+		"/Volumes/Home Directory/node-bootstrap/nodebootstrap/routes/user.js",
+		"/Volumes/Home Directory/node-bootstrap/nodebootstrap/routes/index.js",
+		"/Volumes/Home Directory/node-bootstrap/nodebootstrap/config.json",
+		"/Volumes/Home Directory/node-bootstrap/nodebootstrap/views/layout.jade",
+		"/Volumes/Home Directory/node-bootstrap/nodebootstrap/views/index.jade",
+		"/Volumes/Home Directory/node-bootstrap/nodebootstrap/views/config.jade",
+		"/Volumes/Home Directory/node-bootstrap/temp/WebWol/views/index.jade",
+		"/Volumes/Home Directory/app/example/say.js",
+		"/Volumes/Home Directory/app/example/server.js",
+		"/Volumes/Home Directory/app/server.js",
+		"/Users/holymoly/Downloads/untitled.html",
+		"/Users/holymoly/Documents/Mukke",
+		"/Users/holymoly/Documents/Portu",
+		"/Users/holymoly/.zshrc",
+		"/Applications/Arduino.app/Contents/Resources/Java/hardware/arduino/cores/tiny/PwmTimer.h",
+		"/Applications/Arduino.app/Contents/Resources/Java/hardware/arduino/bootloaders/empty/empty2313at8.hex",
+		"/Users/holymoly/Documents/libraries/itg3200/ITG3200.cpp",
+		"/Users/holymoly/Documents/libraries/Adxl345/ADXL345.h",
+		"/Users/holymoly/Downloads/WebServer/WebServer.ino",
+		"/Volumes/SMB_Data/Arduino/+Projects/Moodlight/Slider.html",
+		"/Users/holymoly/Documents/Slider_Arduino.html",
+		"/Users/holymoly/Downloads/WebServer.ino"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"sidde",
+			"sid",
+			"sideba",
+			"\"",
+			"padding",
+			"div",
+			"updateFtp",
+			"ev",
+			"\"",
+			"req.body",
+			"entries",
+			"list",
+			"cwd",
+			"list",
+			"ready",
+			"data",
+			"ready",
+			"connect",
+			"ip",
+			"i",
+			"VPN",
+			"2",
+			"option",
+			"tls",
+			"options.secure",
+			"secs",
+			"_secstate",
+			"pszb",
+			"tls.connect",
+			"TLS handshake failed",
+			"handshake",
+			"TLS handshake",
+			"secure",
+			"control",
+			"socket =",
+			"secure",
+			"socket",
+			"secure",
+			"USER",
+			"USER and PASS",
+			"Error: Please login with USER and PASS",
+			"secure",
+			"sec",
+			"a(href='') Goes somewhere",
+			"flui",
+			"nickname",
+			"nicknam",
+			"buildUL",
+			"builddata",
+			"dropd",
+			"disabled",
+			"btn-disabled",
+			"enable",
+			"enabled",
+			"btn",
+			"td",
+			"pase",
+			"string",
+			"\"\"",
+			"ValLed",
+			"\"\"",
+			"client.println(\"",
+			"\");",
+			"  ",
+			" ",
+			"(?>\\x0D\\x0A?|[\\x0A-\\x0C\\x85\\x{2028}\\x{2029}])",
+			"^([\\w\\d\\_\\.\\s\\-]*)$"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"'",
+			"data",
+			"",
+			"\"",
+			"",
+			"\");",
+			"$\");"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "index.jade",
+					"settings":
+					{
+						"buffer_size": 1939,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1858,
+								1872
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Jade/Syntaxes/Jade.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/Git/WebFtp/public/bootstrap/css/bootstrap-theme.css",
+					"settings":
+					{
+						"buffer_size": 16819,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								33,
+								34
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 2,
+					"file": "/Git/WebFtp/public/scripts/functions.js",
+					"settings":
+					{
+						"buffer_size": 5729,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5640,
+								5640
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1388.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.395141943842,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 140.0,
+	"status_bar_visible": true
+}

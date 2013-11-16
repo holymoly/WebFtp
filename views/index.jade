@@ -1,0 +1,48 @@
+extends layout 
+
+block content
+  div.navbar.navbar-default.navbar-fixed-top
+    div.container
+      div.navbar-header
+        a(data-toggle='collapse', data-target='.navbar-collapse').btn.navbar-toggle
+          span.icon-bar
+          span.icon-bar
+          span.icon-bar
+        a(href='/').navbar-brand #{title}
+      div.navbar-collapse.collapse
+        ul.nav.navbar-nav
+          li.active
+            a(href='/ftpBrowser') FTP Browser
+          li
+            a(href='/folderBrowser') Folder Browser
+          li
+            a(href='/config') Config
+  div.container
+    div.row
+      form(action="/ftpConnect",method="post")  
+        
+          div.col-md-2
+            input.form-control(id="textFtpUrl", type="text", name="FtpUrl", placeholder="FTP URL")
+          div.col-md-2
+            input.form-control(id="textPort", type="text", name="FtpPort", placeholder="FTP Port")
+          div.col-md-2
+            input.form-control(id="textUser", type="text", name="FtpUser", placeholder="User")
+          div.col-md-2
+            input.form-control(id="textPass", type="password", name="FtpPass", placeholder="Password")
+          div.col-md-1
+            label.checkbox
+              input(type='checkbox', value='true', id="chkTls", name="FtpTls") 
+              | TLS/SSL
+        
+          div.col-md-1.col-md-offset-0
+            .btn.btn-block.btn-primary(onclick='connect()', value='Connect') Connect
+          div.col-md-1.col-md-offset-0
+            .btn.btn-block.btn-primary(onclick='saveConfig()', value="Save") Save   
+      div.col-md-1.col-md-offset-0
+        .btn-group.btn-block
+          button.btn.block.btn-primary(data-toggle='dropdown', onclick='getStoredServers()') Server
+            span.caret
+          ul.dropdown-menu(role='menu', id="foundedServers")  
+    div.tree.col-md-6(id='treeSection')
+    div.tree.col-md-6(id='downloadList', ondrop='drop(event)', ondragover='allowDrop(event)')
+  div.footer
