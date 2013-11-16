@@ -1,9 +1,3 @@
 [
-    {
-        "ftpUrl": "test",
-        "ftpPort": "123",
-        "ftpUser": "testuser",
-        "ftpPass": "test",
-        "ftpTls": "true"
-    }
+
 ]
