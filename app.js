@@ -49,15 +49,4 @@ io.sockets.on('connection', function (socket) {
   socketEventsListers.list(socket); 
   socketEventsListers.saveConfig(socket); 
   socketEventsListers.getStoredServers(socket); 
-  
-  /*
-  arp.getMac('192.168.123.1', function(err, mac){
-    if (err){
-      console.log(err);
-    }
-    else{
-      console.log(mac);
-    }
-  });
-  */
 });
