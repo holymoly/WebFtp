@@ -628,5 +628,5 @@ socket.on('initialConfig', function(data){
 //Receiving and updatimg count of download list items
 socket.on('indicator', function(data){
   console.log(data);
-   document.getElementById(data.type).hidden = data.hidden;
+  document.getElementById(data.type).hidden = data.hidden;
 });

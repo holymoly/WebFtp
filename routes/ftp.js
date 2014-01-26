@@ -135,10 +135,12 @@ exports.initDownloadList = function(socket){
       if (err) {
         console.log('Error: ' + err);
         socket.emit('updateDownloadList', 'er');
+        socket.emit('indicator', {type: 'indicatorDownloader', hidden: indicatorDownloader});
         return;
       } else {
-       data = JSON.parse(data);
-       socket.emit('updateDownloadList', data);
+        data = JSON.parse(data);
+        socket.emit('updateDownloadList', data);
+        socket.emit('indicator', {type: 'indicatorDownloader', hidden: indicatorDownloader});
       }
     });
   });
@@ -264,7 +266,6 @@ exports.initDownload = function(data,socket){
     });
 //*************
     function oneDownloadAfterTheOther(data,index){
-
       indicatorDownloader = false;
       socket.emit('indicator', {type: 'indicatorDownloader', hidden: indicatorDownloader});
 
@@ -276,7 +277,9 @@ exports.initDownload = function(data,socket){
             downloadAll(files,function (status) {
               if(status === 'next'){
                 console.log(status);
-                //this.deleteDownloadItem(data[index].path, socket);
+                console.log('Deleting ' + data[index].path + ' from List');
+                deleteFromList({path : data[index].path}, socket);
+
                 oneDownloadAfterTheOther(data, index + 1);
               }
             });
@@ -292,6 +295,8 @@ exports.initDownload = function(data,socket){
         }
       }
       else{
+        indicatorDownloader = true;
+        socket.emit('indicator', {type: 'indicatorDownloader', hidden: indicatorDownloader});
         console.log('Downloads finished');
         c.end();
       }
@@ -400,7 +405,7 @@ var downloadAll = function(ftpFiles,cb){
             //Compare if online = local size
             if(ftpFiles[0].size === stats.size){
               //Remove first item(Last downloaded item)
-              removeFileFromList();
+              removeFileFromArray();
             }else{
               console.log('Wrong filesize, try to append download to file');
 
@@ -408,7 +413,7 @@ var downloadAll = function(ftpFiles,cb){
                 if (err) {
                   console.log(err);
                 }
-                removeFileFromList();
+                removeFileFromArray();
               });
             }
           });
@@ -432,7 +437,7 @@ var downloadAll = function(ftpFiles,cb){
         //already downloaded
         if(ftpFiles[0].size === status.size){
           console.log('already downloaded ' + ftpFiles[0].name);
-          removeFileFromList();
+          removeFileFromArray();
         }else{
           //append on partial local file
 
@@ -440,14 +445,14 @@ var downloadAll = function(ftpFiles,cb){
             if (err) {
               console.log(err);
             }
-            removeFileFromList();
+            removeFileFromArray();
           });
         }
       }
     });
   });
 //*************
-  function removeFileFromList(){
+  function removeFileFromArray(){
     ftpFiles.splice(0,1);
     console.log('Files to download: ' + ftpFiles.length);
     
@@ -507,6 +512,11 @@ var downloadAppendToFile = function(ftpFile, offset, cb){
 
 //Delete on item from Downloadlists
 exports.deleteDownloadItem = function(item,socket){
+  deleteFromList(item, socket);
+};
+
+//Delete on item List
+var deleteFromList= function(item, socket){
   //console.log(data);
   config.getDownloadList(function(err, path){
     fs.readFile(path, 'utf8', function (err, data) {
@@ -516,10 +526,10 @@ exports.deleteDownloadItem = function(item,socket){
         return;
       }
       data = JSON.parse(data);
+
       data.forEach(function(entry) {
         if (entry.path == item.path){
           data.splice(data.indexOf(entry) ,1);
-          //console.log(data);
           fs.writeFile(path, JSON.stringify(data , null, 4), function(err) {
             if(err) {
               console.log(err);
