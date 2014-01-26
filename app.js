@@ -6,7 +6,6 @@
 var express = require('express');
 var routes = require('./routes');
 var user = require('./routes/user');
-var ftp = require('./routes/ftp');
 var http = require('http');
 var path = require('path');
 var socketEventsListers = require('./routes/socket')
@@ -31,8 +30,11 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
-app.get('/users', user.list);
-app.post('/ftpConnect', ftp.connect);
+app.get('/downloadList', user.downloadList);
+app.get('/scanner', user.scanner);
+app.get('/tvShows', user.tvShows);
+app.get('/lostEpisodes', user.lostEpisodes);
+app.get('/config', user.config);
 
 // start Server
 var server = http.createServer(app).listen(app.get('port'), function(){
@@ -43,10 +45,27 @@ var io = require('socket.io').listen(server);
 //io.set('log level', 1); // reduce logging
 
 // Creating listeners and events on client socket connection
+io.set('log level', 1); // reduce logging
 io.sockets.on('connection', function (socket) {
   // Add listener for ftp events
   socketEventsListers.connect(socket); 
   socketEventsListers.list(socket); 
-  socketEventsListers.saveConfig(socket); 
+  socketEventsListers.saveFtp(socket); 
   socketEventsListers.getStoredServers(socket); 
+  socketEventsListers.addToDownloadList(socket); 
+  socketEventsListers.initDownloadList(socket); 
+  socketEventsListers.addToScannerList(socket); 
+  socketEventsListers.initScannerList(socket); 
+  socketEventsListers.initScannerResultList(socket); 
+  socketEventsListers.initTvShowList(socket); 
+  socketEventsListers.scanFtp(socket); 
+  socketEventsListers.bindOfflineOnlineTvShow(socket); 
+  socketEventsListers.initLostEpisodesList(socket); 
+  socketEventsListers.checkEpisodes(socket); 
+  socketEventsListers.initDownload(socket); 
+  socketEventsListers.initConfig(socket); 
+  socketEventsListers.saveConfig(socket);
+  socketEventsListers.checkTvShow(socket); 
+  socketEventsListers.deleteDownloadItem(socket); 
+  socketEventsListers.initConfigFiles(socket); 
 });

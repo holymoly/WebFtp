@@ -1,0 +1,11 @@
+{
+    "paths": {
+        "pathTvShows": "/mnt/TvShows/",
+        "pathDownloads": "/mnt/Downloads/",
+        "downloadList": "/mnt/Config/downloadList.json",
+        "dumpFile": "/mnt/Config/dumpFile.txt",
+        "matchedTvShows": "/mnt/Config/matchedTvShows.json",
+        "scannerList": "/mnt/Config/scannerList.json",
+        "storedFtp": "/mnt/Config/storedFtp.json"
+    }
+}

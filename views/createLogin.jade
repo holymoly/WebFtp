@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  .container
+    form.form-signin(method='post')
+      h2.form-signin-heading Create New Account
+      input.form-control(type='email', placeholder='Email address', name='Email', required)
+      input.form-control(type='text',  placeholder='Nickname', name='Nick', required)
+      input.form-control(type='password', placeholder='Password', name='Pass', required)
+      
+      button.btn.btn-lg.btn-primary.btn-block(type='submit') Submit

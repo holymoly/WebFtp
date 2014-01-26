@@ -1,7 +1,7 @@
 extends layout 
 
 block content
-  body(onload='initCounter()')
+  body(onload='initScanner()')
     div.navbar.navbar-default.navbar-fixed-top
       div.container
         div.navbar-header
@@ -12,22 +12,24 @@ block content
           a(href='/').navbar-brand #{title}
         div.navbar-collapse.collapse
           ul.nav.navbar-nav
-            li.active
+            li
               a(href='/') FTP Browser
-            li(id='downloadList', ondrop='dropDownload(event)', ondragover='allowDrop(event)')
+            li(id='downloadList')
               a.downloadBox(href='/downloadList') Download List
                span.pink(id='listCounterDownload') 0
-            li(id='scanner', ondrop='dropScanner(event)', ondragover='allowDrop(event)')
+            li.active(id='scanner')
               a.downloadBox(href='/scanner') Scanner
                span.pink(id='listCounterScanner') 0
             li
               a(href='/tvShows') Tv Shows
             li
-              a(href='/lostEpisodes') Lost Episodes
+              a(href='/lostEpisodes') Lost Episodes  
             li
               a(href='/config') Config
-               
     div.container
+      label Paths
+      div.tree.col-md-12(id='treeScanPaths')
+
       div.row
         div.col-md-2
           input.form-control(id='textFtpUrl', type='text', name='FtpUrl', placeholder='FTP URL')
@@ -41,14 +43,14 @@ block content
           label.checkbox
             input(type='checkbox', value='true', id='chkTls', name='FtpTls') 
             | TLS/SSL
-        div.col-md-1.col-md-offset-0
-          .btn.btn-block.btn-primary(onclick='connect()', value='Connect') Connect
-        div.col-md-1.col-md-offset-0
-          .btn.btn-block.btn-primary(onclick='saveFtp()', value='Save') Save   
+        div.col-md-2
+          .btn.btn-block.btn-primary(onclick='scanFtp()', value='Scan') Scan
         div.col-md-1.col-md-offset-0
           .btn-group.btn-block
             button.btn.block.btn-primary(data-toggle='dropdown', onclick='getStoredServers()') Server
               span.caret
             ul.dropdown-menu(role='menu', id='foundedServers')  
-      div.tree.col-md-12(id='treeSection')
+      label Results 
+      image(id='indicatorScanner',hidden=true, src='/pics/ajax-loader.gif')
+      div.tree(id='treeScanResults')
     div.footer

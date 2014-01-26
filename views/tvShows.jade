@@ -1,0 +1,37 @@
+extends layout 
+
+block content
+  body(onload='initTvShows()')
+    div.navbar.navbar-default.navbar-fixed-top
+      div.container
+        div.navbar-header
+          a(data-toggle='collapse', data-target='.navbar-collapse').btn.navbar-toggle
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a(href='/').navbar-brand #{title}
+        div.navbar-collapse.collapse
+          ul.nav.navbar-nav
+            li
+              a(href='/') FTP Browser
+            li(id='downloadList')
+              a.downloadBox(href='/downloadList') Download List
+               span.pink(id='listCounterDownload') 0
+            li(id='scanner')
+              a.downloadBox(href='/scanner') Scanner
+               span.pink(id='listCounterScanner') 0
+            li.active
+              a(href='/tvShows') Tv Shows   
+            li
+              a(href='/lostEpisodes') Lost Episodes
+            li
+              a(href='/config') Config
+    div.container
+      div.col-md-6
+        label TV Shows
+        div.tree
+          ul(id='TvShowTreeList')
+      div.col-md-6
+        label TV Shows Results
+        div.tree(id='TvShowResultTree')
+    div.footer

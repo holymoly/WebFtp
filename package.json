@@ -9,6 +9,7 @@
     "express": "3.4.4",
     "jade": "~0.35.0",
     "ftp": "~0.3.4",
-    "socket.io": "~0.9.16"
+    "socket.io": "~0.9.16",
+    "thetvdb-api": "~0.1.0"
   }
 }

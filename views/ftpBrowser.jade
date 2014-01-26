@@ -1,0 +1,109 @@
+extends layout 
+
+block content
+  div.navbar.navbar-default.navbar-fixed-top
+    div.container
+      div.navbar-header
+        a(data-toggle='collapse', data-target='.navbar-collapse').btn.navbar-toggle
+          span.icon-bar
+          span.icon-bar
+          span.icon-bar
+        a(href='/').navbar-brand #{title}
+      div.navbar-collapse.collapse
+        ul.nav.navbar-nav
+          li.active
+            a(href='/ftpBrowser') FTP Browser
+          li
+            a(href='/folderBrowser') Folder Browser
+          li
+            a(href='/config') Config
+  div.top
+  div.container
+    div.row
+      div.col-md-3
+        .btn-group.btn-block
+          button.btn.btn-primary Stored FTPs
+          button.btn.dropdown-toggle.btn-primary(data-toggle='dropdown')
+              span.caret
+            ul.dropdown-menu(role='menu', id="foundedPcs") 
+      div.col-md-2.col-md-offset-7
+        input.btn.btn-block.btn-primary(type="submit", value="Connect")
+    form(action="/ftpServer",method="post")
+      div.row
+        div.col-md-3
+          input.form-control(id="textFtpUrl", type="text", name="FtpUrl", placeholder="FTP URL", required)
+        div.col-md-2
+          input.form-control(id="textUser", type="text", name="FtpUser", placeholder="User", required)
+        div.col-md-2
+          input.form-control(id="textPass", type="password", name="FtpPass", placeholder="Password", required)
+        div.col-md-2
+          label.checkbox
+            input(type='checkbox', value='security') 
+            | TLS/SSL
+        div.col-md-2.col-md-offset-1
+          input.btn.btn-block.btn-primary(type="submit", value="Save")
+    div(class="tree well")
+        ul
+          li
+            span
+              .glyphicon.glyphicon-folder-close
+              | Parent
+            ul
+              li
+                span
+                  .glyphicon.glyphicon-folder-close
+                  | Child                
+                ul
+                  li
+                    span
+                      .glyphicon.glyphicon-file
+                      | Grand Child
+              li
+                span
+                  i.icon-minus-sign
+                  | Child                
+                ul
+                  li
+                    span
+                      i.icon-leaf
+                      | Grand Child                    
+                  li
+                    span
+                      i.icon-minus-sign
+                      | Grand Child                    
+                    ul
+                      li
+                        span
+                          i.icon-minus-sign
+                          | Great Grand Child                        
+                        ul
+                          li
+                            span
+                              i.icon-leaf
+                              | Great great Grand Child                            
+                          li
+                            span
+                              i.icon-leaf
+                              | Great great Grand Child
+                      li
+                        span
+                          i.icon-leaf
+                          | Great Grand Child                        
+                      li
+                        span
+                          i.icon-leaf
+                          | Great Grand Child                        
+                  li
+                    span
+                      i.icon-leaf
+                      | Grand Child                    
+          li
+            span
+              i.icon-folder-open
+              | Parent2            
+            ul
+              li
+                span
+                  i.icon-leaf
+                  | Child
+  div.footer
