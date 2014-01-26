@@ -280,7 +280,7 @@ exports.initDownload = function(data,socket){
                 console.log('Deleting ' + data[index].path + ' from List');
                 deleteFromList({path : data[index].path}, socket);
 
-                oneDownloadAfterTheOther(data, index + 1);
+                oneDownloadAfterTheOther(data, index + 1, socket);
               }
             });
           });
@@ -290,7 +290,7 @@ exports.initDownload = function(data,socket){
           //console.log(data.path);
 
           downloadAll(fileArray,function () {
-              oneDownloadAfterTheOther(data, index + 1);
+              oneDownloadAfterTheOther(data, index + 1, socket);
           });
         }
       }
