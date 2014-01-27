@@ -10,6 +10,7 @@
     "jade": "~0.35.0",
     "ftp": "~0.3.4",
     "socket.io": "~0.9.16",
-    "thetvdb-api": "~0.1.0"
+    "thetvdb-api": "~0.1.0",
+    "mkdirp": "~0.3.5"
   }
 }
