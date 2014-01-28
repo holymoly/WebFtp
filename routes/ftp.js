@@ -397,12 +397,12 @@ var downloadAll = function(ftpFiles, folderPath, cb){
   //console.log(ftpFiles[0]);
   //console.log('Folder: ' + folderPath);
   //console.log(fsPath.basename(folderPath));
-  //console.log(ftpFiles[0].name.substring(ftpFiles[0].name.indexOf(fsPath.basename(folderPath)),ftpFiles[0].name.length));
+  console.log('Downlload to: ' + ftpFiles[0].name.substring(ftpFiles[0].name.indexOf(fsPath.basename(folderPath)),ftpFiles[0].name.length));
   
   config.getDownloadPath(function(err, downloadFolder){
     var downloadPath = downloadFolder + ftpFiles[0].name.substring(ftpFiles[0].name.indexOf(fsPath.basename(folderPath)),ftpFiles[0].name.length);
     mkdirp(fsPath.dirname(downloadPath), function(err) { 
-
+      if(err) throw err;
       console.log(downloadPath);
       //Only download completly if file not exists elsewise skip or append
       checkIfFileAlreadyExists(downloadPath, function(status){
@@ -425,7 +425,7 @@ var downloadAll = function(ftpFiles, folderPath, cb){
               }else{
                 console.log('Wrong filesize, try to append download to file');
 
-                downloadAppendToFile(ftpFiles[0], stats.size, function(err){
+                downloadAppendToFile(ftpFiles[0], folderPath, stats.size, function(err){
                   if (err) {
                     console.log(err);
                   }
@@ -457,7 +457,7 @@ var downloadAll = function(ftpFiles, folderPath, cb){
           }else{
             //append on partial local file
 
-            downloadAppendToFile(ftpFiles[0], status.size, function(err){
+            downloadAppendToFile(ftpFiles[0], folderPath, status.size, function(err){
               if (err) {
                 console.log(err);
               }
@@ -480,7 +480,7 @@ var downloadAll = function(ftpFiles, folderPath, cb){
       console.log('Download of Item completed');
       cb('next');
     }else{
-      downloadAll(ftpFiles,cb);
+      downloadAll(ftpFiles,folderPath,cb);
       cb('wait');
     }
   };
@@ -500,9 +500,17 @@ var downloadAll = function(ftpFiles, folderPath, cb){
 };
 
 // Downnload file from List and start over if more items available
-var downloadAppendToFile = function(ftpFile, offset, cb){
+var downloadAppendToFile = function(ftpFile, folderPath, offset, cb){
+  
+  
   config.getDownloadPath(function(err, downloadFolder){
-    var downloadPath = downloadFolder + fsPath.basename(ftpFile.name);
+    var downloadPath = downloadFolder + ftpFile.name.substring(ftpFile.name.indexOf(fsPath.basename(folderPath)),ftpFile.name.length)
+    console.log('***************************');
+    console.log(ftpFile);
+    console.log('Folder: ' + folderPath);
+    console.log(fsPath.basename(folderPath));
+    console.log('Downlload to: ' + ftpFile.name.substring(ftpFile.name.indexOf(fsPath.basename(folderPath)),ftpFile.name.length));
+    console.log('***************************');
     //Filestream that appends the data
     var fileStream = fs.createWriteStream(downloadPath,{  'flags': 'a'
                                                         , 'encoding': null
