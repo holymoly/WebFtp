@@ -353,7 +353,7 @@ var recursivListFtpFilesFast = function(dir,scanType,cb){
   var results = [];
   c.list(dir,function(err, list) {
     if (err) {
-      //console.log(dir);
+      console.log('Error for listing of: ' +  dir);
       return cb(err,dir);
     }
     //console.log(list.length);
@@ -373,6 +373,7 @@ var recursivListFtpFilesFast = function(dir,scanType,cb){
           
             recursivListFtpFilesFast(file.name, scanType , function(err, res) {
               if(err){
+                console.log('Error scanning Folder: ' + file.name);
                 console.log(err);
                 //console.log(file.name);
                 return cb(err);
@@ -387,7 +388,7 @@ var recursivListFtpFilesFast = function(dir,scanType,cb){
         }
       });
     }else{
-      console.log('undifned ftp folder list');
+      console.log('undefined ftp folder list');
     }
   });
 };
@@ -397,13 +398,13 @@ var downloadAll = function(ftpFiles, folderPath, cb){
   //console.log(ftpFiles[0]);
   //console.log('Folder: ' + folderPath);
   //console.log(fsPath.basename(folderPath));
-  console.log('Downlload to: ' + ftpFiles[0].name.substring(ftpFiles[0].name.indexOf(fsPath.basename(folderPath)),ftpFiles[0].name.length));
+  
   
   config.getDownloadPath(function(err, downloadFolder){
     var downloadPath = downloadFolder + ftpFiles[0].name.substring(ftpFiles[0].name.indexOf(fsPath.basename(folderPath)),ftpFiles[0].name.length);
     mkdirp(fsPath.dirname(downloadPath), function(err) { 
       if(err) throw err;
-      console.log(downloadPath);
+      console.log('Downlload to: ' + downloadPath);
       //Only download completly if file not exists elsewise skip or append
       checkIfFileAlreadyExists(downloadPath, function(status){
         if (status === 'not found'){
@@ -505,19 +506,22 @@ var downloadAppendToFile = function(ftpFile, folderPath, offset, cb){
   
   config.getDownloadPath(function(err, downloadFolder){
     var downloadPath = downloadFolder + ftpFile.name.substring(ftpFile.name.indexOf(fsPath.basename(folderPath)),ftpFile.name.length)
-    console.log('***************************');
-    console.log(ftpFile);
-    console.log('Folder: ' + folderPath);
-    console.log(fsPath.basename(folderPath));
-    console.log('Downlload to: ' + ftpFile.name.substring(ftpFile.name.indexOf(fsPath.basename(folderPath)),ftpFile.name.length));
-    console.log('***************************');
+    //console.log('***************************');
+    //console.log(ftpFile);
+    //console.log('Folder: ' + folderPath);
+    //console.log(fsPath.basename(folderPath));
+    console.log('Append to: ' + downloadPath);
+    //console.log('***************************');
     //Filestream that appends the data
     var fileStream = fs.createWriteStream(downloadPath,{  'flags': 'a'
                                                         , 'encoding': null
                                                         });
     //Emitted when file is completed on disk
     fileStream.once('finish', function() { 
+      console.log('Append of ' + fsPath.basename(ftpFile.name) +' finished');
+      console.log('Size online: ' + ftpFile.size);
       fs.stat(downloadPath, function (err, stats) {
+        console.log('Size local:  ' + stats.size);
         //Compare if online = local size
         if(ftpFile.size === stats.size){
           fs.chmod(downloadPath, '775');
