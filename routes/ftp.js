@@ -55,7 +55,7 @@ exports.initRoot = function(data,socket){
     c.list(function(err, list) {
       if (err) throw err;
       console.dir(list);
-      socket.emit('initialFolderFtp',list);
+      socketEventsListers.emitInitRoot(list);
     }); 
   });
 };
@@ -96,8 +96,7 @@ exports.list = function(path,socket){
   c.list(path, function(err, list) {
     if (err) throw err;
     console.dir(list);
-    socket.emit('setSubfolders', path,list);
-
+    socketEventsListers.emitSetSubfolders(path, list);
   });
 };
 
@@ -109,7 +108,7 @@ exports.addToDownloadList = function(newEntry,socket){
     fs.readFile(path, 'utf8', function (err, data) {
       if (err) {
         console.log('Error: ' + err);
-        socket.emit('updateCountDownloadList', 'er');
+        socketEventsListers.emitUpdateCountDownloadList('er');
         return;
       }
       data = JSON.parse(data);
@@ -118,15 +117,15 @@ exports.addToDownloadList = function(newEntry,socket){
           fs.writeFile(path, JSON.stringify(data , null, 4), function(err) {
             if(err) {
               console.log(err);
-              socket.emit('updateCountDownloadList', 'er');
+              socketEventsListers.emitUpdateCountDownloadList('er');
             } else {
-              socket.emit('updateCountDownloadList', data.length)
+              socketEventsListers.emitUpdateCountDownloadList(data.length);
               console.log("Item added");
             }
           });
       } else{
         console.log('Download list counter = ' + data.length);
-        socket.emit('updateCountDownloadList', data.length);
+        socketEventsListers.emitUpdateCountDownloadList(data.length);
       }
     });
   });
@@ -138,13 +137,13 @@ exports.initDownloadList = function(socket){
     fs.readFile(path, 'utf8', function (err, data) {
       if (err) {
         console.log('Error: ' + err);
-        socket.emit('updateDownloadList', 'er');
-        socket.emit('indicator', {type: 'indicatorDownloader', hidden: indicatorDownloader});
+        socketEventsListers.emitUpdateDownloadList('er');
+        socketEventsListers.emitUpdateIndicator({type: 'indicatorDownloader', hidden: indicatorDownloader});
         return;
       } else {
         data = JSON.parse(data);
-        socket.emit('updateDownloadList', data);
-        socket.emit('indicator', {type: 'indicatorDownloader', hidden: indicatorDownloader});
+        socketEventsListers.emitUpdateDownloadList(data);
+        socketEventsListers.emitUpdateIndicator({type: 'indicatorDownloader', hidden: indicatorDownloader});
       }
     });
   });
@@ -157,7 +156,7 @@ exports.addToScannerList = function(newEntry,socket){
     fs.readFile(path, 'utf8', function (err, data) {
       if (err) {
         console.log('Error: ' + err);
-        socket.emit('updateCountScannerList', 'er');
+        socketEventsListers.emitUpdateCountScannerList('er');
         return;
       }
       data = JSON.parse(data);
@@ -166,15 +165,15 @@ exports.addToScannerList = function(newEntry,socket){
         fs.writeFile(path, JSON.stringify(data , null, 4), function(err) {
           if(err) {
             console.log(err);
-            socket.emit('updateCountScannerList', 'er');
+            socketEventsListers.emitUpdateCountScannerList('er');
           } else {
-            socket.emit('updateCountScannerList', data.length)
+            socketEventsListers.emitUpdateCountScannerList(data.length);
             console.log("Item added");
           }
         });
       } else{
         console.log('Scanner list counter = ' + data.length);
-        socket.emit('updateCountScannerList', data.length);
+        socketEventsListers.emitUpdateCountScannerList(data.length);
       }
     });
   });
@@ -186,12 +185,12 @@ exports.initScannerList = function(socket){
     fs.readFile(path, 'utf8', function (err, data) {
       if (err) {
         console.log('Error: ' + err);
-        socket.emit('initialScannerFolder', 'er');
+        socketEventsListers.emitInitScannerFolder('er');
         return;
       } else {
        data = JSON.parse(data);
-       socket.emit('initialScannerFolder', data);
-       socket.emit('indicator', {type: 'indicatorScanner', hidden: indicatorScanner});
+       socketEventsListers.emitInitScannerFolder(data);
+       socketEventsListers.emitUpdateIndicator({type: 'indicatorScanner', hidden: indicatorScanner});
       }
     });
   });
@@ -239,11 +238,11 @@ exports.initScannerResultList = function(socket){
     fs.readFile(dumpPath, 'utf8', function (err, data) {
       if (err) {
         console.log('Error: ' + err);
-        socket.emit('initialScannerResultList', 'er');
+        socketEventsListers.emitInitScannerResultList('er');
         return;
       } else {
        //data = JSON.parse(data);
-       socket.emit('initialScannerResultList', data);
+       socketEventsListers.emitInitScannerResultList(data);
       }
     });
   });
@@ -257,7 +256,7 @@ exports.initDownload = function(data,socket){
       fs.readFile(path, 'utf8', function (err, data) {
         if (err) {
           console.log('Error: ' + err);
-          socket.emit('updateDownloadList', 'er');
+          socketEventsListers.emitUpdateDownloadList(data);
           return;
         } else {
           data = JSON.parse(data);
@@ -271,7 +270,7 @@ exports.initDownload = function(data,socket){
 //*************
     function oneDownloadAfterTheOther(data,index){
       indicatorDownloader = false;
-      socket.emit('indicator', {type: 'indicatorDownloader', hidden: indicatorDownloader});
+      socketEventsListers.emitUpdateIndicator({type: 'indicatorDownloader', hidden: indicatorDownloader});
 
       if(index < data.length){  
         //Check if folder or file
@@ -307,7 +306,7 @@ exports.initDownload = function(data,socket){
       }
       else{
         indicatorDownloader = true;
-        socket.emit('indicator', {type: 'indicatorDownloader', hidden: indicatorDownloader});
+        socketEventsListers.emitUpdateIndicator({type: 'indicatorDownloader', hidden: indicatorDownloader});
         console.log('Downloads finished');
         c.end();
       }
@@ -561,13 +560,13 @@ exports.deleteDownloadItem = function(item,socket){
 };
 
 //Delete on item List
-var deleteFromList= function(item, socket){
+var deleteFromList = function(item, socket){
   //console.log(data);
   config.getDownloadList(function(err, path){
     fs.readFile(path, 'utf8', function (err, data) {
       if (err) {
         console.log('Error: ' + err);
-        socket.emit('updateCountDownloadList', 'er');
+        socketEventsListers.emitUpdateCountDownloadList('er');
         return;
       }
       data = JSON.parse(data);
@@ -578,10 +577,10 @@ var deleteFromList= function(item, socket){
           fs.writeFile(path, JSON.stringify(data , null, 4), function(err) {
             if(err) {
               console.log(err);
-              socket.emit('updateCountDownloadList', 'er');
+              socketEventsListers.emitUpdateCountDownloadList('er');
             } else {
-              socket.emit('updateCountDownloadList', data.length)
-              socket.emit('updateDownloadList', data)
+              socketEventsListers.emitUpdateCountDownloadList(data.length);
+              socketEventsListers.emitUpdateDownloadList(data);
               console.log("Item deleted");
             }
           });

@@ -635,5 +635,6 @@ socket.on('indicator', function(data){
 //Updating Couter for folders to scan
 socket.on('scanFolderCounter', function(data){
   //console.log(data);
-  document.getElementById('folderCounter').innerHTML = 'Folders to scan ' + data;
+  if(document.contains(document.getElementById('folderCounter')))
+    document.getElementById('folderCounter').innerHTML = 'Folders to scan ' + data;
 });
