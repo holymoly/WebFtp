@@ -47,7 +47,10 @@ var io = require('socket.io').listen(server);
 // Creating listeners and events on client socket connection
 io.set('log level', 1); // reduce logging
 io.sockets.on('connection', function (socket) {
+ 
   // Add listener for ftp events
+  console.log('connect');
+  socketEventsListers.setSessionSocket(socket); 
   socketEventsListers.connect(socket); 
   socketEventsListers.list(socket); 
   socketEventsListers.saveFtp(socket); 
@@ -68,4 +71,5 @@ io.sockets.on('connection', function (socket) {
   socketEventsListers.checkTvShow(socket); 
   socketEventsListers.deleteDownloadItem(socket); 
   socketEventsListers.initConfigFiles(socket); 
+  socket.on('disconnect', socketEventsListers.resetSessionSocket)
 });

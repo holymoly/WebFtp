@@ -5,6 +5,7 @@ var fs = require('fs');
 var fsPath = require('path');
 var config = require('./config')
 var mkdirp = require('mkdirp');
+var socketEventsListers = require('./socket')
 //var storedServerFile = './store/storedFtp.json';
 //var downloadList = './store/downloadList.json';
 //var scannerList = './store/scannerList.json';
@@ -21,6 +22,8 @@ var ftpPass = '';
 var indicatorScanner = true;
 var indicatorDownloader = true;
 var busy = undefined;
+var scanActive = undefined;
+var scanTodoArray = [];
 
 //Save Server Config
 exports.save = function(newEntry){
@@ -216,9 +219,9 @@ exports.scanFtp = function(data, socket){
                 data = JSON.parse(data);
                 console.log(data);
                 data.forEach(function(folder) {
-                  recursivListFtpFilesFast(folder.path, 'ftpScan', function (err, files) {
+                  recursivListFtpFilesFast(folder.path, 'ftpScan', socket, function (err, files) {
                     //Next folder
-                    if (err) return console.log(err);
+                    console.log(files);
                   });
                 });
               }
@@ -349,42 +352,53 @@ var recursivListFtpFiles = function(dir,scanType,done){
 };
 
 //List folder or files fast paralell
-var recursivListFtpFilesFast = function(dir,scanType,cb){
-  var results = [];
+var recursivListFtpFilesFast = function(dir, scanType, socket, cb){
+
   c.list(dir,function(err, list) {
     if (err) {
       console.log('Error for listing of: ' +  dir);
-      return cb(err,dir);
+      console.log(err);
+      //Try again
+      recursivListFtpFilesFast(dir, scanType , socket, function(err, res) {
+        if(err){
+          console.log('Error scanning Folder: ' + dir);
+          console.log(err);
+        }
+      });
+      //return cb(err,dir);
     }
-    //console.log(list.length);
     if (typeof(list) !== 'undefined'){
-      var pending = list.length;
-      if (!pending) return cb(null, results);
+      //build array with items to check
+      
       list.forEach(function(file) {
+
         file.name = dir + '/' + file.name;
-        //console.log(file);
         if (file.type === 'd'){
           // Scan for folder on ftp
+         
           if(scanType === 'ftpScan' & file.name.toUpperCase().indexOf('SAMPLE') === -1 & file.name.indexOf('[SAS') === -1 & file.name.toUpperCase().indexOf('SUBS') === -1 & file.name.toUpperCase().indexOf('PROOF') === -1){
+            scanTodoArray.push(file.name);
+            //console.log('Added Item: ' + scanTodoArray.length + ' ' + file.name);
+            socketEventsListers.emitScanFolderCounter(scanTodoArray.length);
             config.getDumpFile(function(err, dumpPath){ 
               fs.appendFile(dumpPath, file.name + '  ' + file.date + '\n', function (err) {
               });
             });
           
-            recursivListFtpFilesFast(file.name, scanType , function(err, res) {
+            recursivListFtpFilesFast(file.name, scanType ,  socket, function(err, res) {
               if(err){
                 console.log('Error scanning Folder: ' + file.name);
                 console.log(err);
-                //console.log(file.name);
-                return cb(err);
               }
-              results = results.concat(res);
-              if (!--pending) cb(null, results);
+              scanTodoArray.splice(scanTodoArray.indexOf(file.name) ,1);
+              //console.log('Removed Item: ' + scanTodoArray.length + ' ' + file.name);
+              socketEventsListers.emitScanFolderCounter(scanTodoArray.length);
+            
             });
           }
-        } else {    
-          results.push(file);
-          if (!--pending) cb(null, results);
+        }
+        if(list[list.length -1] === file ){
+          cb();
         }
       });
     }else{
@@ -398,13 +412,12 @@ var downloadAll = function(ftpFiles, folderPath, cb){
   //console.log(ftpFiles[0]);
   //console.log('Folder: ' + folderPath);
   //console.log(fsPath.basename(folderPath));
-  
-  
+
   config.getDownloadPath(function(err, downloadFolder){
     var downloadPath = downloadFolder + ftpFiles[0].name.substring(ftpFiles[0].name.indexOf(fsPath.basename(folderPath)),ftpFiles[0].name.length);
     mkdirp(fsPath.dirname(downloadPath), function(err) { 
       if(err) throw err;
-      console.log('Downlload to: ' + downloadPath);
+      console.log('Download to: ' + downloadPath);
       //Only download completly if file not exists elsewise skip or append
       checkIfFileAlreadyExists(downloadPath, function(status){
         if (status === 'not found'){

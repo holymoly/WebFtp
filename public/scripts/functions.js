@@ -627,6 +627,13 @@ socket.on('initialConfig', function(data){
 
 //Receiving and updatimg count of download list items
 socket.on('indicator', function(data){
-  console.log(data);
+  //console.log(data);
   document.getElementById(data.type).hidden = data.hidden;
+});
+
+
+//Updating Couter for folders to scan
+socket.on('scanFolderCounter', function(data){
+  //console.log(data);
+  document.getElementById('folderCounter').innerHTML = 'Folders to scan ' + data;
 });

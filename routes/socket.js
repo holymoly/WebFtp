@@ -6,7 +6,20 @@ var ftp = require('./ftp');
 var theTvDb = require('./theTvDb');
 var config = require('./config')
 var fs = require('fs');
+
+var sessionSocket = undefined;
 //var storedServerFile = './store/storedFtp.json';
+
+// Set session socket
+exports.setSessionSocket = function(socket){
+  sessionSocket = socket;
+};
+
+// Reset session socket
+exports.resetSessionSocket = function(){
+  console.log('reset');
+  sessionSocket = undefined;
+};
 
 // Triggers the connect
 exports.connect = function(socket){
@@ -157,4 +170,10 @@ exports.initConfigFiles = function(socket){
   socket.on('initConfigFiles', function(data) {
     config.initConfigFiles(data,socket);
   });
+};
+
+// Update scan folder counter
+exports.emitScanFolderCounter = function(counter){
+  if(sessionSocket !== undefined)
+    sessionSocket.emit('scanFolderCounter', counter);
 };
