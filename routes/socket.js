@@ -6,7 +6,20 @@ var ftp = require('./ftp');
 var theTvDb = require('./theTvDb');
 var config = require('./config')
 var fs = require('fs');
+
+var sessionSocket = undefined;
 //var storedServerFile = './store/storedFtp.json';
+
+// Set session socket
+exports.setSessionSocket = function(socket){
+  sessionSocket = socket;
+};
+
+// Reset session socket
+exports.resetSessionSocket = function(){
+  console.log('reset');
+  sessionSocket = undefined;
+};
 
 // Triggers the connect
 exports.connect = function(socket){
@@ -158,3 +171,67 @@ exports.initConfigFiles = function(socket){
     config.initConfigFiles(data,socket);
   });
 };
+
+// Update scan folder counter
+exports.emitScanFolderCounter = function(counter){
+  //socketEventsListers.emitScanFolderCounter(scanTodoArray.length);
+  if(sessionSocket !== undefined)
+    sessionSocket.emit('scanFolderCounter', counter);
+};
+
+// Update counter for download list
+exports.emitUpdateCountDownloadList = function(data){
+  //socketEventsListers.emitScanFolderCounter(scanTodoArray.length);
+  if(sessionSocket !== undefined)
+    sessionSocket.emit('updateCountDownloadList', data);
+};
+
+// Update counter for scanner list
+exports.emitUpdateCountScannerList = function(data){
+  //socketEventsListers.emitScanFolderCounter(scanTodoArray.length);
+  if(sessionSocket !== undefined)
+    sessionSocket.emit('updateCountScannerList', data);
+};
+
+// Update download list
+exports.emitUpdateDownloadList = function(data){
+  //socketEventsListers.emitScanFolderCounter(scanTodoArray.length);
+  if(sessionSocket !== undefined)
+    sessionSocket.emit('updateDownloadList', data);
+};
+
+// Init data for Root directory
+exports.emitInitRoot = function(data){
+  //socketEventsListers.emitScanFolderCounter(scanTodoArray.length);
+  if(sessionSocket !== undefined)
+    sessionSocket.emit('initialFolderFtp',data);
+};
+
+// Add subfolders
+exports.emitSetSubfolders = function(path, data){
+  //socketEventsListers.emitScanFolderCounter(scanTodoArray.length);
+  if(sessionSocket !== undefined)
+    sessionSocket.emit('setSubfolders', path, data);
+};
+
+// Add update status indicator
+exports.emitUpdateIndicator = function(data){
+  //socketEventsListers.emitScanFolderCounter(scanTodoArray.length);
+  if(sessionSocket !== undefined)
+    sessionSocket.emit('indicator',data);
+};
+
+// Init Scanner Folder
+exports.emitInitScannerFolder = function(data){
+  //socketEventsListers.emitScanFolderCounter(scanTodoArray.length);
+  if(sessionSocket !== undefined)
+    sessionSocket.emit('initialScannerFolder',data);
+};
+
+// Init Scanner List
+exports.emitInitScannerResultList = function(data){
+  //socketEventsListers.emitScanFolderCounter(scanTodoArray.length);
+  if(sessionSocket !== undefined)
+    sessionSocket.emit('initialScannerResultList',data);
+};
+

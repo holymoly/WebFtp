@@ -1,12 +1,16 @@
 todo:
+
 - Colored output for console.logs (highlights files, sizes and amount while of console.log while downloading)
-- remove item form Downloadlist automatic when download finished
 - add speed and actual file in download tab when downlaod is active
 - add pogressbar and indicator if conection/download is active
 - tls is hardcoded
 
+
 done:
 - unify ftp login for all connections (Browser, Scan, Download)
-- check if already user is already loged in
+- check if user is already loged in
 - remove item form Downloadlist automatic when download finished
 - check if download can append to file if file exists partial
+- remove item form Downloadlist automatic when download finished
+- add ignore from download to config page
+- downloads should be in there original folder

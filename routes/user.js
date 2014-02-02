@@ -22,3 +22,7 @@ exports.lostEpisodes = function(req, res){
 exports.config = function(req, res){
   res.render('config', { title: 'WebFtp' });
 };
+
+exports.index = function(req, res){
+  res.render('index', { title: 'WebFtp' });
+};

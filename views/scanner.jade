@@ -50,7 +50,7 @@ block content
             button.btn.block.btn-primary(data-toggle='dropdown', onclick='getStoredServers()') Server
               span.caret
             ul.dropdown-menu(role='menu', id='foundedServers')  
-      label Results 
+      label(id='folderCounter') Results
       image(id='indicatorScanner',hidden=true, src='/pics/ajax-loader.gif')
       div.tree(id='treeScanResults')
     div.footer

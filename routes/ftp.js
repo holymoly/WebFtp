@@ -4,6 +4,8 @@
 var fs = require('fs');
 var fsPath = require('path');
 var config = require('./config')
+var mkdirp = require('mkdirp');
+var socketEventsListers = require('./socket')
 //var storedServerFile = './store/storedFtp.json';
 //var downloadList = './store/downloadList.json';
 //var scannerList = './store/scannerList.json';
@@ -20,6 +22,8 @@ var ftpPass = '';
 var indicatorScanner = true;
 var indicatorDownloader = true;
 var busy = undefined;
+var scanActive = undefined;
+var scanTodoArray = [];
 
 //Save Server Config
 exports.save = function(newEntry){
@@ -51,7 +55,7 @@ exports.initRoot = function(data,socket){
     c.list(function(err, list) {
       if (err) throw err;
       console.dir(list);
-      socket.emit('initialFolderFtp',list);
+      socketEventsListers.emitInitRoot(list);
     }); 
   });
 };
@@ -92,8 +96,7 @@ exports.list = function(path,socket){
   c.list(path, function(err, list) {
     if (err) throw err;
     console.dir(list);
-    socket.emit('setSubfolders', path,list);
-
+    socketEventsListers.emitSetSubfolders(path, list);
   });
 };
 
@@ -105,7 +108,7 @@ exports.addToDownloadList = function(newEntry,socket){
     fs.readFile(path, 'utf8', function (err, data) {
       if (err) {
         console.log('Error: ' + err);
-        socket.emit('updateCountDownloadList', 'er');
+        socketEventsListers.emitUpdateCountDownloadList('er');
         return;
       }
       data = JSON.parse(data);
@@ -114,15 +117,15 @@ exports.addToDownloadList = function(newEntry,socket){
           fs.writeFile(path, JSON.stringify(data , null, 4), function(err) {
             if(err) {
               console.log(err);
-              socket.emit('updateCountDownloadList', 'er');
+              socketEventsListers.emitUpdateCountDownloadList('er');
             } else {
-              socket.emit('updateCountDownloadList', data.length)
+              socketEventsListers.emitUpdateCountDownloadList(data.length);
               console.log("Item added");
             }
           });
       } else{
         console.log('Download list counter = ' + data.length);
-        socket.emit('updateCountDownloadList', data.length);
+        socketEventsListers.emitUpdateCountDownloadList(data.length);
       }
     });
   });
@@ -134,13 +137,13 @@ exports.initDownloadList = function(socket){
     fs.readFile(path, 'utf8', function (err, data) {
       if (err) {
         console.log('Error: ' + err);
-        socket.emit('updateDownloadList', 'er');
-        socket.emit('indicator', {type: 'indicatorDownloader', hidden: indicatorDownloader});
+        socketEventsListers.emitUpdateDownloadList('er');
+        socketEventsListers.emitUpdateIndicator({type: 'indicatorDownloader', hidden: indicatorDownloader});
         return;
       } else {
         data = JSON.parse(data);
-        socket.emit('updateDownloadList', data);
-        socket.emit('indicator', {type: 'indicatorDownloader', hidden: indicatorDownloader});
+        socketEventsListers.emitUpdateDownloadList(data);
+        socketEventsListers.emitUpdateIndicator({type: 'indicatorDownloader', hidden: indicatorDownloader});
       }
     });
   });
@@ -153,7 +156,7 @@ exports.addToScannerList = function(newEntry,socket){
     fs.readFile(path, 'utf8', function (err, data) {
       if (err) {
         console.log('Error: ' + err);
-        socket.emit('updateCountScannerList', 'er');
+        socketEventsListers.emitUpdateCountScannerList('er');
         return;
       }
       data = JSON.parse(data);
@@ -162,15 +165,15 @@ exports.addToScannerList = function(newEntry,socket){
         fs.writeFile(path, JSON.stringify(data , null, 4), function(err) {
           if(err) {
             console.log(err);
-            socket.emit('updateCountScannerList', 'er');
+            socketEventsListers.emitUpdateCountScannerList('er');
           } else {
-            socket.emit('updateCountScannerList', data.length)
+            socketEventsListers.emitUpdateCountScannerList(data.length);
             console.log("Item added");
           }
         });
       } else{
         console.log('Scanner list counter = ' + data.length);
-        socket.emit('updateCountScannerList', data.length);
+        socketEventsListers.emitUpdateCountScannerList(data.length);
       }
     });
   });
@@ -182,12 +185,12 @@ exports.initScannerList = function(socket){
     fs.readFile(path, 'utf8', function (err, data) {
       if (err) {
         console.log('Error: ' + err);
-        socket.emit('initialScannerFolder', 'er');
+        socketEventsListers.emitInitScannerFolder('er');
         return;
       } else {
        data = JSON.parse(data);
-       socket.emit('initialScannerFolder', data);
-       socket.emit('indicator', {type: 'indicatorScanner', hidden: indicatorScanner});
+       socketEventsListers.emitInitScannerFolder(data);
+       socketEventsListers.emitUpdateIndicator({type: 'indicatorScanner', hidden: indicatorScanner});
       }
     });
   });
@@ -215,9 +218,9 @@ exports.scanFtp = function(data, socket){
                 data = JSON.parse(data);
                 console.log(data);
                 data.forEach(function(folder) {
-                  recursivListFtpFilesFast(folder.path, 'ftpScan', function (err, files) {
+                  recursivListFtpFilesFast(folder.path, 'ftpScan', socket, function (err, files) {
                     //Next folder
-                    if (err) return console.log(err);
+                    console.log(files);
                   });
                 });
               }
@@ -235,11 +238,11 @@ exports.initScannerResultList = function(socket){
     fs.readFile(dumpPath, 'utf8', function (err, data) {
       if (err) {
         console.log('Error: ' + err);
-        socket.emit('initialScannerResultList', 'er');
+        socketEventsListers.emitInitScannerResultList('er');
         return;
       } else {
        //data = JSON.parse(data);
-       socket.emit('initialScannerResultList', data);
+       socketEventsListers.emitInitScannerResultList(data);
       }
     });
   });
@@ -253,7 +256,7 @@ exports.initDownload = function(data,socket){
       fs.readFile(path, 'utf8', function (err, data) {
         if (err) {
           console.log('Error: ' + err);
-          socket.emit('updateDownloadList', 'er');
+          socketEventsListers.emitUpdateDownloadList(data);
           return;
         } else {
           data = JSON.parse(data);
@@ -267,14 +270,14 @@ exports.initDownload = function(data,socket){
 //*************
     function oneDownloadAfterTheOther(data,index){
       indicatorDownloader = false;
-      socket.emit('indicator', {type: 'indicatorDownloader', hidden: indicatorDownloader});
+      socketEventsListers.emitUpdateIndicator({type: 'indicatorDownloader', hidden: indicatorDownloader});
 
       if(index < data.length){  
         //Check if folder or file
         if(data[index].type === 'folder'){
           recursivListFtpFiles(data[index].path, 'downloadScan', function (err, files) {
-        
-            downloadAll(files,function (status) {
+            //download all files found in folder
+            downloadAll(files, data[index].path, function (status) {
               if(status === 'next'){
                 console.log(status);
                 console.log('Deleting ' + data[index].path + ' from List');
@@ -286,17 +289,24 @@ exports.initDownload = function(data,socket){
           });
         }else{
           var fileArray = [];
-          fileArray.push(data.path);
-          //console.log(data.path);
+          c.size(data[index].path, function(err, fileSize){
+            console.log(fileSize);
+            fileArray.push({name : data[index].path,
+                            size : fileSize});
+            //console.log(data.path);
 
-          downloadAll(fileArray,function () {
-              oneDownloadAfterTheOther(data, index + 1, socket);
+            downloadAll(fileArray, data[index].path, function () {
+                console.log('Deleting ' + data[index].path + ' from List');
+                deleteFromList({path : data[index].path}, socket);
+
+                oneDownloadAfterTheOther(data, index + 1, socket);
+            });
           });
         }
       }
       else{
         indicatorDownloader = true;
-        socket.emit('indicator', {type: 'indicatorDownloader', hidden: indicatorDownloader});
+        socketEventsListers.emitUpdateIndicator({type: 'indicatorDownloader', hidden: indicatorDownloader});
         console.log('Downloads finished');
         c.end();
       }
@@ -341,114 +351,141 @@ var recursivListFtpFiles = function(dir,scanType,done){
 };
 
 //List folder or files fast paralell
-var recursivListFtpFilesFast = function(dir,scanType,cb){
-  var results = [];
+var recursivListFtpFilesFast = function(dir, scanType, socket, cb){
+
   c.list(dir,function(err, list) {
     if (err) {
-      //console.log(dir);
-      return cb(err,dir);
+      console.log('Error for listing of: ' +  dir);
+      console.log(err);
+      //Try again
+      recursivListFtpFilesFast(dir, scanType , socket, function(err, res) {
+        if(err){
+          console.log('Error scanning Folder: ' + dir);
+          console.log(err);
+        }
+      });
+      //return cb(err,dir);
     }
-    //console.log(list.length);
     if (typeof(list) !== 'undefined'){
-      var pending = list.length;
-      if (!pending) return cb(null, results);
+      //build array with items to check
+      
       list.forEach(function(file) {
+
         file.name = dir + '/' + file.name;
-        //console.log(file);
         if (file.type === 'd'){
           // Scan for folder on ftp
+         
           if(scanType === 'ftpScan' & file.name.toUpperCase().indexOf('SAMPLE') === -1 & file.name.indexOf('[SAS') === -1 & file.name.toUpperCase().indexOf('SUBS') === -1 & file.name.toUpperCase().indexOf('PROOF') === -1){
+            scanTodoArray.push(file.name);
+            //console.log('Added Item: ' + scanTodoArray.length + ' ' + file.name);
+            socketEventsListers.emitScanFolderCounter(scanTodoArray.length);
             config.getDumpFile(function(err, dumpPath){ 
               fs.appendFile(dumpPath, file.name + '  ' + file.date + '\n', function (err) {
               });
             });
           
-            recursivListFtpFilesFast(file.name, scanType , function(err, res) {
+            recursivListFtpFilesFast(file.name, scanType ,  socket, function(err, res) {
               if(err){
+                console.log('Error scanning Folder: ' + file.name);
                 console.log(err);
-                //console.log(file.name);
-                return cb(err);
               }
-              results = results.concat(res);
-              if (!--pending) cb(null, results);
+              scanTodoArray.splice(scanTodoArray.indexOf(file.name) ,1);
+              //console.log('Removed Item: ' + scanTodoArray.length + ' ' + file.name);
+              socketEventsListers.emitScanFolderCounter(scanTodoArray.length);
+            
             });
           }
-        } else {    
-          results.push(file);
-          if (!--pending) cb(null, results);
+        }
+        if(list[list.length -1] === file ){
+          cb();
         }
       });
     }else{
-      console.log('undifned ftp folder list');
+      console.log('undefined ftp folder list');
     }
   });
 };
 
 // Downnload file from List and start over if more items available
-var downloadAll = function(ftpFiles,cb){
+var downloadAll = function(ftpFiles, folderPath, cb){
   config.getDownloadPath(function(err, downloadFolder){
-    var downloadPath = downloadFolder + fsPath.basename(ftpFiles[0].name);
-    //Only download completly if file not exists elsewise skip or append
-    checkIfFileAlreadyExists(downloadPath, function(status){
-      if (status === 'not found'){
-        var fileStream = fs.createWriteStream(downloadPath,{  'flags': 'w'
-                                                            , 'encoding': null
-                                                            , 'mode': 0775
-                                                            });
-        //Emitted when file is completed on disk
-        fileStream.once('finish', function() { 
-          //**** Print Results and compare online and local size
-          console.log('Download of ' + fsPath.basename(ftpFiles[0].name) +' finished');
-          console.log('Size online: ' + ftpFiles[0].size);
-          fs.stat(downloadPath, function (err, stats) {
-            console.log('Size local:  ' + stats.size);
-            //Compare if online = local size
-            if(ftpFiles[0].size === stats.size){
-              //Remove first item(Last downloaded item)
-              removeFileFromArray();
-            }else{
-              console.log('Wrong filesize, try to append download to file');
+    var downloadPath = downloadFolder + ftpFiles[0].name.substring(ftpFiles[0].name.indexOf(fsPath.basename(folderPath)),ftpFiles[0].name.length);
+    mkdirp(fsPath.dirname(downloadPath), function(err) { 
+      if(err) throw err;
+      console.log('Download to: ' + downloadPath);
+      //Only download complete if file not exists or should be ignored elsewise skip or append
+      checkIfFileAlreadyExists(downloadPath, function(status){
+        config.getIgnoreItems(function(err, ignoerSubstrings){
+          //check if file should be ignored
+          console.log(ignoerSubstrings);   
+          checkIfFileShouldBeIgnored(ftpFiles[0].name,ignoerSubstrings,function(ignored){
+            console.log(ignored);
+            if (status === 'not found' & ignored === false){
+              var fileStream = fs.createWriteStream(downloadPath,{  'flags': 'w'
+                                                                  , 'encoding': null
+                                                                  , 'mode': 0775
+                                                                  });
+              //Emitted when file is completed on disk
+              fileStream.once('finish', function() { 
+                //**** Print Results and compare online and local size
+                console.log('Download of ' + fsPath.basename(ftpFiles[0].name) +' finished');
+                console.log('Size online: ' + ftpFiles[0].size);
+                fs.stat(downloadPath, function (err, stats) {
+                  console.log('Size local:  ' + stats.size);
+                  //Compare if online = local size
+                  if(ftpFiles[0].size === stats.size){
+                    //Remove first item(Last downloaded item)
+                    removeFileFromArray();
+                  }else{
+                    console.log('Wrong filesize, try to append download to file');
 
-              downloadAppendToFile(ftpFiles[0], stats.size, function(err){
-                if (err) {
-                  console.log(err);
-                }
-                removeFileFromArray();
+                    downloadAppendToFile(ftpFiles[0], folderPath, stats.size, function(err){
+                      if (err) {
+                        console.log(err);
+                      }
+                      removeFileFromArray();
+                    });
+                  }
+                });
               });
+
+              fileStream.once('error', function(error) { 
+                console.log(error);
+              });
+
+              c.get(ftpFiles[0].name, function(err, stream) {
+                //console.log(ftpFiles[0]);
+                stream.pipe(fileStream); 
+                if (err) throw err;
+                console.log('Download of ' + fsPath.basename(ftpFiles[0].name) +' started');
+
+                stream.once('error', function (error) {
+                  console.log(error);
+                });
+              });
+            }else{
+              //already downloaded
+              if(ignored === false){
+                if(ftpFiles[0].size === status.size){
+                  console.log('already downloaded ' + ftpFiles[0].name);
+                  removeFileFromArray();
+                }else{
+                  //append on partial local file
+                  downloadAppendToFile(ftpFiles[0], folderPath, status.size, function(err){
+                    if (err) {
+                      console.log(err);
+                    }
+                    removeFileFromArray();
+                  });
+                }
+              }else{
+                console.log('Ignored ' + ftpFiles[0].name)
+                removeFileFromArray();
+              }
             }
-          });
+          }); 
         });
-
-        fileStream.once('error', function(error) { 
-          console.log(error);
-        });
-
-        c.get(ftpFiles[0].name, function(err, stream) {
-          //console.log(ftpFiles[0]);
-          stream.pipe(fileStream); 
-          if (err) throw err;
-          console.log('Download of ' + fsPath.basename(ftpFiles[0].name) +' started');
-
-          stream.once('error', function (error) {
-            console.log(error);
-          });
-        });
-      }else{
-        //already downloaded
-        if(ftpFiles[0].size === status.size){
-          console.log('already downloaded ' + ftpFiles[0].name);
-          removeFileFromArray();
-        }else{
-          //append on partial local file
-
-          downloadAppendToFile(ftpFiles[0], status.size, function(err){
-            if (err) {
-              console.log(err);
-            }
-            removeFileFromArray();
-          });
-        }
-      }
+      });
     });
   });
 //*************
@@ -460,7 +497,7 @@ var downloadAll = function(ftpFiles,cb){
       console.log('Download of Item completed');
       cb('next');
     }else{
-      downloadAll(ftpFiles,cb);
+      downloadAll(ftpFiles,folderPath,cb);
       cb('wait');
     }
   };
@@ -477,19 +514,46 @@ var downloadAll = function(ftpFiles,cb){
     });
   };
 //***************
+//***************
+  function checkIfFileShouldBeIgnored(file, ignoreItems, done){
+    var i = 0;
+    var found = false;
+
+    (function next() {
+      var item = ignoreItems[i++];
+      if (!item) return done(found);
+      if(file.indexOf(item) !== -1){
+        found = true;
+        cb(found);
+      }
+      next(); 
+    })();
+  };
+//***************
 };
 
 // Downnload file from List and start over if more items available
-var downloadAppendToFile = function(ftpFile, offset, cb){
+var downloadAppendToFile = function(ftpFile, folderPath, offset, cb){
+  
+  
   config.getDownloadPath(function(err, downloadFolder){
-    var downloadPath = downloadFolder + fsPath.basename(ftpFile.name);
+    var downloadPath = downloadFolder + ftpFile.name.substring(ftpFile.name.indexOf(fsPath.basename(folderPath)),ftpFile.name.length)
+    //console.log('***************************');
+    //console.log(ftpFile);
+    //console.log('Folder: ' + folderPath);
+    //console.log(fsPath.basename(folderPath));
+    console.log('Append to: ' + downloadPath);
+    //console.log('***************************');
     //Filestream that appends the data
     var fileStream = fs.createWriteStream(downloadPath,{  'flags': 'a'
                                                         , 'encoding': null
                                                         });
     //Emitted when file is completed on disk
     fileStream.once('finish', function() { 
+      console.log('Append of ' + fsPath.basename(ftpFile.name) +' finished');
+      console.log('Size online: ' + ftpFile.size);
       fs.stat(downloadPath, function (err, stats) {
+        console.log('Size local:  ' + stats.size);
         //Compare if online = local size
         if(ftpFile.size === stats.size){
           fs.chmod(downloadPath, '775');
@@ -516,13 +580,13 @@ exports.deleteDownloadItem = function(item,socket){
 };
 
 //Delete on item List
-var deleteFromList= function(item, socket){
+var deleteFromList = function(item, socket){
   //console.log(data);
   config.getDownloadList(function(err, path){
     fs.readFile(path, 'utf8', function (err, data) {
       if (err) {
         console.log('Error: ' + err);
-        socket.emit('updateCountDownloadList', 'er');
+        socketEventsListers.emitUpdateCountDownloadList('er');
         return;
       }
       data = JSON.parse(data);
@@ -533,10 +597,10 @@ var deleteFromList= function(item, socket){
           fs.writeFile(path, JSON.stringify(data , null, 4), function(err) {
             if(err) {
               console.log(err);
-              socket.emit('updateCountDownloadList', 'er');
+              socketEventsListers.emitUpdateCountDownloadList('er');
             } else {
-              socket.emit('updateCountDownloadList', data.length)
-              socket.emit('updateDownloadList', data)
+              socketEventsListers.emitUpdateCountDownloadList(data.length);
+              socketEventsListers.emitUpdateDownloadList(data);
               console.log("Item deleted");
             }
           });
