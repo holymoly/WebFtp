@@ -81,6 +81,7 @@ function saveConfig(){
   var matchedTvShows = document.getElementById('textMatchedTvShows').value;
   var scannerList = document.getElementById('textScannerList').value;  
   var storedFtp = document.getElementById('textStoredFtp').value;  
+  var ignoreFromDownload = document.getElementById('textIgnoreFromDownload').value;  
 
   console.log('save');
   socket.emit('saveConfig', { pathTvShows: pathTvShows,
@@ -89,7 +90,8 @@ function saveConfig(){
                               dumpFile : dumpFile,
                               matchedTvShows : matchedTvShows,
                               scannerList : scannerList,
-                              storedFtp : storedFtp
+                              storedFtp : storedFtp,
+                              ignoreFromDownload : ignoreFromDownload
                             });
 };
 
@@ -108,6 +110,7 @@ function initConfigFiles(){
                                   matchedTvShows : matchedTvShows,
                                   scannerList : scannerList,
                                   storedFtp : storedFtp
+
                                 });
 };
 
@@ -623,6 +626,7 @@ socket.on('initialConfig', function(data){
   document.getElementById('textMatchedTvShows').value = data.matchedTvShows;
   document.getElementById('textScannerList').value = data.scannerList;
   document.getElementById('textStoredFtp').value = data.storedFtp;
+  document.getElementById('textIgnoreFromDownload').value = data.ignoreFromDownload;
 });
 
 //Receiving and updatimg count of download list items

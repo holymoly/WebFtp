@@ -7,5 +7,6 @@
         "matchedTvShows": "/mnt/Config/matchedTvShows.json",
         "scannerList": "/mnt/Config/scannerList.json",
         "storedFtp": "/mnt/Config/storedFtp.json"
-    }
+    },
+    "ignoreFromDownload": "sample,proof,[,nfo"
 }

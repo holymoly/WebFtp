@@ -408,81 +408,85 @@ var recursivListFtpFilesFast = function(dir, scanType, socket, cb){
 
 // Downnload file from List and start over if more items available
 var downloadAll = function(ftpFiles, folderPath, cb){
-  //console.log(ftpFiles[0]);
-  //console.log('Folder: ' + folderPath);
-  //console.log(fsPath.basename(folderPath));
-
   config.getDownloadPath(function(err, downloadFolder){
     var downloadPath = downloadFolder + ftpFiles[0].name.substring(ftpFiles[0].name.indexOf(fsPath.basename(folderPath)),ftpFiles[0].name.length);
     mkdirp(fsPath.dirname(downloadPath), function(err) { 
       if(err) throw err;
       console.log('Download to: ' + downloadPath);
-      //Only download completly if file not exists elsewise skip or append
+      //Only download complete if file not exists or should be ignored elsewise skip or append
       checkIfFileAlreadyExists(downloadPath, function(status){
-        if (status === 'not found'){
-          var fileStream = fs.createWriteStream(downloadPath,{  'flags': 'w'
-                                                              , 'encoding': null
-                                                              , 'mode': 0775
-                                                              });
-          //Emitted when file is completed on disk
-          fileStream.once('finish', function() { 
-            //**** Print Results and compare online and local size
-            console.log('Download of ' + fsPath.basename(ftpFiles[0].name) +' finished');
-            console.log('Size online: ' + ftpFiles[0].size);
-            fs.stat(downloadPath, function (err, stats) {
-              console.log('Size local:  ' + stats.size);
-              //Compare if online = local size
-              if(ftpFiles[0].size === stats.size){
-                //Remove first item(Last downloaded item)
-                removeFileFromArray();
-              }else{
-                console.log('Wrong filesize, try to append download to file');
+        config.getIgnoreItems(function(err, ignoerSubstrings){
+          //check if file should be ignored
+          console.log(ignoerSubstrings);   
+          checkIfFileShouldBeIgnored(ftpFiles[0].name,ignoerSubstrings,function(ignored){
+            console.log(ignored);
+            if (status === 'not found' & ignored === false){
+              var fileStream = fs.createWriteStream(downloadPath,{  'flags': 'w'
+                                                                  , 'encoding': null
+                                                                  , 'mode': 0775
+                                                                  });
+              //Emitted when file is completed on disk
+              fileStream.once('finish', function() { 
+                //**** Print Results and compare online and local size
+                console.log('Download of ' + fsPath.basename(ftpFiles[0].name) +' finished');
+                console.log('Size online: ' + ftpFiles[0].size);
+                fs.stat(downloadPath, function (err, stats) {
+                  console.log('Size local:  ' + stats.size);
+                  //Compare if online = local size
+                  if(ftpFiles[0].size === stats.size){
+                    //Remove first item(Last downloaded item)
+                    removeFileFromArray();
+                  }else{
+                    console.log('Wrong filesize, try to append download to file');
 
-                downloadAppendToFile(ftpFiles[0], folderPath, stats.size, function(err){
-                  if (err) {
-                    console.log(err);
+                    downloadAppendToFile(ftpFiles[0], folderPath, stats.size, function(err){
+                      if (err) {
+                        console.log(err);
+                      }
+                      removeFileFromArray();
+                    });
                   }
-                  removeFileFromArray();
                 });
+              });
+
+              fileStream.once('error', function(error) { 
+                console.log(error);
+              });
+
+              c.get(ftpFiles[0].name, function(err, stream) {
+                //console.log(ftpFiles[0]);
+                stream.pipe(fileStream); 
+                if (err) throw err;
+                console.log('Download of ' + fsPath.basename(ftpFiles[0].name) +' started');
+
+                stream.once('error', function (error) {
+                  console.log(error);
+                });
+              });
+            }else{
+              //already downloaded
+              if(ignored === false){
+                if(ftpFiles[0].size === status.size){
+                  console.log('already downloaded ' + ftpFiles[0].name);
+                  removeFileFromArray();
+                }else{
+                  //append on partial local file
+                  downloadAppendToFile(ftpFiles[0], folderPath, status.size, function(err){
+                    if (err) {
+                      console.log(err);
+                    }
+                    removeFileFromArray();
+                  });
+                }
+              }else{
+                console.log('Ignored ' + ftpFiles[0].name)
+                removeFileFromArray();
               }
-            });
-          });
-
-          fileStream.once('error', function(error) { 
-            console.log(error);
-          });
-
-          c.get(ftpFiles[0].name, function(err, stream) {
-            //console.log(ftpFiles[0]);
-            stream.pipe(fileStream); 
-            if (err) throw err;
-            console.log('Download of ' + fsPath.basename(ftpFiles[0].name) +' started');
-
-            stream.once('error', function (error) {
-              console.log(error);
-            });
-          });
-        }else{
-          //already downloaded
-          if(ftpFiles[0].size === status.size){
-            console.log('already downloaded ' + ftpFiles[0].name);
-            removeFileFromArray();
-          }else{
-            //append on partial local file
-
-            downloadAppendToFile(ftpFiles[0], folderPath, status.size, function(err){
-              if (err) {
-                console.log(err);
-              }
-              removeFileFromArray();
-            });
-          }
-        }
+            }
+          }); 
+        });
       });
-
     });
-    
-    
   });
 //*************
   function removeFileFromArray(){
@@ -508,6 +512,22 @@ var downloadAll = function(ftpFiles, folderPath, cb){
           cb(stats);
         }
     });
+  };
+//***************
+//***************
+  function checkIfFileShouldBeIgnored(file, ignoreItems, done){
+    var i = 0;
+    var found = false;
+
+    (function next() {
+      var item = ignoreItems[i++];
+      if (!item) return done(found);
+      if(file.indexOf(item) !== -1){
+        found = true;
+        cb(found);
+      }
+      next(); 
+    })();
   };
 //***************
 };

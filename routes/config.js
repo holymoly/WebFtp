@@ -96,6 +96,20 @@ exports.getStoredFtp = function(cb){
   });
 };
 
+//Returns array of strings will be ignored from download if file contains string
+exports.getIgnoreItems = function(cb){
+  fs.readFile(configFile, 'utf8', function (err, data) {
+    if (err) {
+      console.log('Error: ' + err);
+      return;
+    }
+    data = JSON.parse(data);
+    //console.dir(data);
+
+    cb(err, data.ignoreFromDownload.split(','));
+  });
+};
+
 // When requested send Configuration
 exports.initConfig = function(socket){
 
@@ -105,13 +119,15 @@ exports.initConfig = function(socket){
       return;
     } else {
       data = JSON.parse(data);
+      console.log(data);
       socket.emit('initialConfig', {pathTvShows : data.paths.pathTvShows, 
                                     pathDownloads : data.paths.pathDownloads,
                                     downloadList : data.paths.downloadList,
                                     dumpFile : data.paths.dumpFile,
                                     matchedTvShows : data.paths.matchedTvShows,
                                     scannerList : data.paths.scannerList,
-                                    storedFtp : data.paths.storedFtp });     
+                                    storedFtp : data.paths.storedFtp,
+                                    ignoreFromDownload : data.ignoreFromDownload });     
     }
   });
 };
@@ -132,6 +148,7 @@ exports.saveConfig = function(data,socket){
       file.paths.matchedTvShows = data.matchedTvShows;
       file.paths.scannerList = data.scannerList;
       file.paths.storedFtp = data.storedFtp;
+      file.ignoreFromDownload = data.ignoreFromDownload;
 
       fs.writeFile(configFile, JSON.stringify(file , null, 4), function(err) {
         if(err) {
@@ -159,28 +176,28 @@ exports.initConfigFiles = function(data,socket){
     if(err) {
       console.log(err);
     } else {
-      console.log("Download list init");
+      console.log("Dumpfile init");
     }
   });
   fs.writeFile(data.matchedTvShows, JSON.stringify(init , null, 4), function(err) {
     if(err) {
       console.log(err);
     } else {
-      console.log("Download list init");
+      console.log("MatchedTvShows init");
     }
   });
   fs.writeFile(data.scannerList, JSON.stringify(init , null, 4), function(err) {
     if(err) {
       console.log(err);
     } else {
-      console.log("Download list init");
+      console.log("Scanner list init");
     }
   });
   fs.writeFile(data.storedFtp, JSON.stringify(init , null, 4), function(err) {
     if(err) {
       console.log(err);
     } else {
-      console.log("Download list init");
+      console.log("storedFtp list init");
     }
   });
 };
