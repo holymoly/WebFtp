@@ -375,7 +375,10 @@ var recursivListFtpFilesFast = function(dir, scanType, socket, cb){
         if (file.type === 'd'){
           // Scan for folder on ftp
          
-          if(scanType === 'ftpScan' & file.name.toUpperCase().indexOf('SAMPLE') === -1 & file.name.indexOf('[SAS') === -1 & file.name.toUpperCase().indexOf('SUBS') === -1 & file.name.toUpperCase().indexOf('PROOF') === -1){
+          if(scanType === 'ftpScan' & file.name.toUpperCase().indexOf('SAMPLE') === -1 
+                                    & file.name.indexOf('[') === -1 
+                                    & file.name.toUpperCase().indexOf('SUBS') === -1 
+                                    & file.name.toUpperCase().indexOf('PROOF') === -1){
             scanTodoArray.push(file.name);
             //console.log('Added Item: ' + scanTodoArray.length + ' ' + file.name);
             socketEventsListers.emitScanFolderCounter(scanTodoArray.length);
@@ -417,9 +420,9 @@ var downloadAll = function(ftpFiles, folderPath, cb){
       checkIfFileAlreadyExists(downloadPath, function(status){
         config.getIgnoreItems(function(err, ignoerSubstrings){
           //check if file should be ignored
-          console.log(ignoerSubstrings);   
+          //console.log(ignoerSubstrings);   
           checkIfFileShouldBeIgnored(ftpFiles[0].name,ignoerSubstrings,function(ignored){
-            console.log(ignored);
+            //console.log(ignored);
             if (status === 'not found' & ignored === false){
               var fileStream = fs.createWriteStream(downloadPath,{  'flags': 'w'
                                                                   , 'encoding': null
@@ -522,7 +525,7 @@ var downloadAll = function(ftpFiles, folderPath, cb){
     (function next() {
       var item = ignoreItems[i++];
       if (!item) return done(found);
-      if(file.indexOf(item) !== -1){
+      if(file.toUpperCase().indexOf(item.toUpperCase()) !== -1){
         found = true;
         cb(found);
       }
