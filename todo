@@ -2,6 +2,7 @@ todo:
 
 - Colored output for console.logs (highlights files, sizes and amount while of console.log while downloading)
 - add speed and actual file in download tab when downlaod is active
+    eingelesene Ordnerstruktur (files und Ordner) in die Downloadliste zurück schreiben und somit den aktuellen fortschritt anzeigen
 - add pogressbar and indicator if conection/download is active
 - tls is hardcoded
 
