@@ -415,6 +415,7 @@ var recursivListFtpFilesFast = function(dir, scanType, socket, cb){
 
 // Downnload file from List and start over if more items available
 var downloadAll = function(ftpFiles, folderPath, cb){
+  size = 0;
   config.getDownloadPath(function(err, downloadFolder){
     //console.log(ftpFiles);
     var downloadPath = downloadFolder + ftpFiles[0].name.substring(ftpFiles[0].name.indexOf(fsPath.basename(folderPath)),ftpFiles[0].name.length);
@@ -463,6 +464,7 @@ var downloadAll = function(ftpFiles, folderPath, cb){
               });
 
               c.get(ftpFiles[0].name, function(err, stream) {
+                size = 0;
                 //console.log(ftpFiles[0]);
                 stream.pipe(fileStream); 
                 if (err) throw err;
@@ -471,6 +473,22 @@ var downloadAll = function(ftpFiles, folderPath, cb){
                 stream.once('error', function (error) {
                   console.log(error);
                 });
+
+                stream.on('data', function (chunk) {
+                  size = size + chunk.length
+                  calcSize = size;
+                  unit = 'B';
+                  if (size >= 1024){
+                    calcSize = size/1024;
+                    unit = 'KB'
+                  }
+                  if (size >= 1048576){
+                    calcSize = size/1048576;
+                    unit = 'MB'
+                  }
+                  socketEventsListers.emitUpdateDownlaodProgres(calcSize.toFixed(1), unit, fsPath.basename(ftpFiles[0].name));
+                });
+
               });
             }else{
               //already downloaded
@@ -577,6 +595,20 @@ var downloadAppendToFile = function(ftpFile, folderPath, offset, cb){
       if (err) throw err;
       c.get(ftpFile.name, function(err, stream) {
         stream.pipe(fileStream);
+        stream.on('data', function (chunk) {
+          size = size + chunk.length
+          calcSize = size;
+          unit = 'B';
+          if (size >= 1024){
+            calcSize = size/1024;
+            unit = 'KB'
+          }
+          if (size >= 1048576){
+            calcSize = size/1048576;
+            unit = 'MB'
+          }
+          socketEventsListers.emitUpdateDownlaodProgres(calcSize.toFixed(1), unit, fsPath.basename(ftpFile));
+        });
       });
     });
   });

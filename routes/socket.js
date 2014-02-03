@@ -235,3 +235,10 @@ exports.emitInitScannerResultList = function(data){
     sessionSocket.emit('initialScannerResultList',data);
 };
 
+// Update download progress
+exports.emitUpdateDownlaodProgres = function(size, unit, fileName){
+  //socketEventsListers.emitScanFolderCounter(scanTodoArray.length);
+  if(sessionSocket !== undefined)
+    sessionSocket.emit('updateDownlaodProgres',size, unit, fileName);
+};
+

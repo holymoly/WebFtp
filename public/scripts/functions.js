@@ -642,3 +642,10 @@ socket.on('scanFolderCounter', function(data){
   if(document.contains(document.getElementById('folderCounter')))
     document.getElementById('folderCounter').innerHTML = 'Folders to scan ' + data;
 });
+
+//Updating Couter for folders to scan
+socket.on('updateDownlaodProgres', function(size, unit, fileName){
+  //console.log(size);
+  if(document.contains(document.getElementById('downlaodProgres')))
+    document.getElementById('downlaodProgres').innerHTML = size + unit + ' of ' + fileName;
+});
