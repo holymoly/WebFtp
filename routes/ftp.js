@@ -4,6 +4,7 @@
 var fs = require('fs');
 var fsPath = require('path');
 var config = require('./config')
+var unrar = require('./unrar');
 var mkdirp = require('mkdirp');
 var socketEventsListers = require('./socket')
 //var storedServerFile = './store/storedFtp.json';
@@ -445,7 +446,7 @@ var downloadAll = function(ftpFiles, folderPath, cb){
                   //Compare if online = local size
                   if(ftpFiles[0].size === stats.size){
                     //Remove first item(Last downloaded item)
-                    removeFileFromArray();
+                    removeFileFromArray(downloadPath);
                   }else{
                     console.log('Wrong filesize, try to append download to file');
 
@@ -453,7 +454,7 @@ var downloadAll = function(ftpFiles, folderPath, cb){
                       if (err) {
                         console.log(err);
                       }
-                      removeFileFromArray();
+                      removeFileFromArray(downloadPath);
                     });
                   }
                 });
@@ -495,19 +496,19 @@ var downloadAll = function(ftpFiles, folderPath, cb){
               if(ignored === false){
                 if(ftpFiles[0].size === status.size){
                   console.log('already downloaded ' + ftpFiles[0].name);
-                  removeFileFromArray();
+                  removeFileFromArray(downloadPath);
                 }else{
                   //append on partial local file
                   downloadAppendToFile(ftpFiles[0], folderPath, status.size, function(err){
                     if (err) {
                       console.log(err);
                     }
-                    removeFileFromArray();
+                    removeFileFromArray(downloadPath);
                   });
                 }
               }else{
                 console.log('Ignored ' + ftpFiles[0].name)
-                removeFileFromArray();
+                removeFileFromArray(downloadPath);
               }
             }
           }); 
@@ -516,15 +517,17 @@ var downloadAll = function(ftpFiles, folderPath, cb){
     });
   });
 //*************
-  function removeFileFromArray(){
+  function removeFileFromArray(file){
     ftpFiles.splice(0,1);
     console.log('Files to download: ' + ftpFiles.length);
     
     if(ftpFiles.length === 0){
       console.log('Download of Item completed');
+      unrar.initUnrar(fsPath.dirname(file));
       cb('next');
     }else{
       downloadAll(ftpFiles,folderPath,cb);
+      //unrar.initUnrar(fsPath.dirname(file));
       cb('wait');
     }
   };
