@@ -48,7 +48,7 @@ function connect(){
   var ftpPort = document.getElementById('textPort').value;
   var ftpUser = document.getElementById('textUser').value;
   var ftpPass = document.getElementById('textPass').value;
-  var ftpTls = document.getElementById('chkTls').value;
+  var ftpTls = document.getElementById('chkTls').checked;
 
   socket.emit('connect', {ftpUrl: ftpUrl ,
                           ftpPort: ftpPort, 
@@ -63,7 +63,7 @@ function saveFtp(){
   var ftpPort = document.getElementById('textPort').value;
   var ftpUser = document.getElementById('textUser').value;
   var ftpPass = document.getElementById('textPass').value;
-  var ftpTls = document.getElementById('chkTls').value;
+  var ftpTls = document.getElementById('chkTls').checked;
 
   socket.emit('saveFtp', {ftpUrl: ftpUrl ,
                           ftpPort: ftpPort, 
@@ -408,7 +408,7 @@ function scanFtp(){
   var ftpPort = document.getElementById('textPort').value;
   var ftpUser = document.getElementById('textUser').value;
   var ftpPass = document.getElementById('textPass').value;
-  var ftpTls = document.getElementById('chkTls').value;
+  var ftpTls = document.getElementById('chkTls').checked;
 
   socket.emit('scanFtp', {ftpUrl: ftpUrl ,
                           ftpPort: ftpPort, 
@@ -612,7 +612,7 @@ function initDownload(){
   var ftpPort = document.getElementById('textPort').value;
   var ftpUser = document.getElementById('textUser').value;
   var ftpPass = document.getElementById('textPass').value;
-  var ftpTls = document.getElementById('chkTls').value;
+  var ftpTls = document.getElementById('chkTls').checked;
 
   socket.emit('initDownload', {ftpUrl: ftpUrl ,ftpPort: ftpPort, ftpUser: ftpUser, ftpPass: ftpPass, ftpTls: ftpTls });
 };

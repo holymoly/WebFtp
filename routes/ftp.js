@@ -72,10 +72,11 @@ var connect = function(data,cb){
     ftpTls = data.ftpTls;
     ftpUser = data.ftpUser;
     ftpPass = data.ftpPass;
+    console.log(data);
     // connect to localhost:21 as anonymous
     c.connect({ host: ftpUrl,
                 port: ftpPort,
-                secure: true, 
+                secure: ftpTls, 
                 secureOptions: {rejectUnauthorized: false},
                 user: ftpUser,
                 password: ftpPass });
@@ -277,6 +278,9 @@ exports.initDownload = function(data,socket){
         if(data[index].type === 'folder'){
           recursivListFtpFiles(data[index].path, 'downloadScan', function (err, files) {
             //download all files found in folder
+            if(err){
+              console.log(err);
+            }
             downloadAll(files, data[index].path, function (status) {
               if(status === 'next'){
                 console.log(status);
@@ -412,6 +416,7 @@ var recursivListFtpFilesFast = function(dir, scanType, socket, cb){
 // Downnload file from List and start over if more items available
 var downloadAll = function(ftpFiles, folderPath, cb){
   config.getDownloadPath(function(err, downloadFolder){
+    //console.log(ftpFiles);
     var downloadPath = downloadFolder + ftpFiles[0].name.substring(ftpFiles[0].name.indexOf(fsPath.basename(folderPath)),ftpFiles[0].name.length);
     mkdirp(fsPath.dirname(downloadPath), function(err) { 
       if(err) throw err;
@@ -433,6 +438,7 @@ var downloadAll = function(ftpFiles, folderPath, cb){
                 //**** Print Results and compare online and local size
                 console.log('Download of ' + fsPath.basename(ftpFiles[0].name) +' finished');
                 console.log('Size online: ' + ftpFiles[0].size);
+
                 fs.stat(downloadPath, function (err, stats) {
                   console.log('Size local:  ' + stats.size);
                   //Compare if online = local size
@@ -461,7 +467,7 @@ var downloadAll = function(ftpFiles, folderPath, cb){
                 stream.pipe(fileStream); 
                 if (err) throw err;
                 console.log('Download of ' + fsPath.basename(ftpFiles[0].name) +' started');
-
+                
                 stream.once('error', function (error) {
                   console.log(error);
                 });

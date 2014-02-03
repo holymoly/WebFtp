@@ -4,7 +4,7 @@ todo:
 - add speed and actual file in download tab when downlaod is active
   eingelesene Ordnerstruktur (files und Ordner) in die Downloadliste zurück schreiben und somit den aktuellen fortschritt anzeigen
 - add pogressbar and indicator if conection/download is active
-- tls is hardcoded
+
 
 
 done:
@@ -15,3 +15,4 @@ done:
 - remove item form Downloadlist automatic when download finished
 - add ignore from download to config page
 - downloads should be in there original folder
+- tls is hardcoded
