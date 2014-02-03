@@ -9,7 +9,6 @@ ehthumbs.db
 Thumbs.db
 node_modules/
 nodejs.log
-storedFtp.json
 
 lib-cov
 *.seed
@@ -19,6 +18,7 @@ lib-cov
 *.out
 *.pid
 *.gz
+*~
 
 pids
 logs
