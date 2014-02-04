@@ -577,7 +577,7 @@ socket.on('lostEpisodes', function(data){
   var root = document.getElementById('LostEpisodesList');
     root.innerHTML = '';
     var ul = document.createElement('ul');
-
+    console.log(data);
     for(i=0; i < data.length; i++){
       //data.forEach(function (item){
       var li = document.createElement('li');

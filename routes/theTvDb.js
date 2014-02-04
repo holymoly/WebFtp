@@ -157,8 +157,10 @@ exports.checkEpisodes = function(data,socket){
         }else{
           episodeString = episodeString + 'E' + item.EpisodeNumber;
         }
-
-        episodesOnline.push(episodeString);
+        //Exclude S00 Episodes
+        if(episodeString.indexOf('S00') === -1){
+          episodesOnline.push(episodeString);
+        }
       });
 
       //Check offline episodes
@@ -178,7 +180,6 @@ exports.checkEpisodes = function(data,socket){
                   i--;
                 }
               });
-
             }
             //Submitting missing episodes
             socket.emit('lostEpisodes', episodesOnline);
