@@ -1,12 +1,12 @@
 {
     "paths": {
         "pathTvShows": "/mnt/TvShows/",
-        "pathDownloads": "/Users/holymoly/Downloads/",
-        "downloadList": "/Users/holymoly/Downloads/downloadList.json",
-        "dumpFile": "/Users/holymoly/Downloads/dumpFile.txt",
-        "matchedTvShows": "/Users/holymoly/Downloads/matchedTvShows.json",
-        "scannerList": "/Users/holymoly/Downloads/scannerList.json",
-        "storedFtp": "/Users/holymoly/Downloads/storedFtp.json"
+        "pathDownloads": "/mnt/Downloads/",
+        "downloadList": "/mnt/Config/downloadList.json",
+        "dumpFile": "/mnt/Config//dumpFile.txt",
+        "matchedTvShows": "/mnt/Config/matchedTvShows.json",
+        "scannerList": "/mnt/Config/scannerList.json",
+        "storedFtp": "/mnt/Config/storedFtp.json"
     },
     "ignoreFromDownload": "sample,proof,[,nfo"
 }

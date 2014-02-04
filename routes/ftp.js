@@ -282,6 +282,7 @@ exports.initDownload = function(data,socket){
             if(err){
               console.log(err);
             }
+
             downloadAll(files, data[index].path, function (status) {
               if(status === 'next'){
                 console.log(status);
@@ -418,7 +419,8 @@ var recursivListFtpFilesFast = function(dir, scanType, socket, cb){
 var downloadAll = function(ftpFiles, folderPath, cb){
   size = 0;
   config.getDownloadPath(function(err, downloadFolder){
-    //console.log(ftpFiles);
+    if(err)
+      console.log(err);
     var downloadPath = downloadFolder + ftpFiles[0].name.substring(ftpFiles[0].name.indexOf(fsPath.basename(folderPath)),ftpFiles[0].name.length);
     mkdirp(fsPath.dirname(downloadPath), function(err) { 
       if(err) throw err;
