@@ -9,6 +9,7 @@ ehthumbs.db
 Thumbs.db
 node_modules/
 nodejs.log
+config.json
 
 lib-cov
 *.seed
