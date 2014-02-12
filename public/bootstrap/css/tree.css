@@ -1,4 +1,6 @@
 .tree {
+	overflow:scroll;
+	height:85vh;
     min-height:1px;
     padding:1px;
     margin-bottom:5px;
