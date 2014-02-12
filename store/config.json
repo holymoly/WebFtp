@@ -8,5 +8,5 @@
         "scannerList": "/mnt/Config/scannerList.json",
         "storedFtp": "/mnt/Config/storedFtp.json"
     },
-    "ignoreFromDownload": "sample,proof"
+    "ignoreFromDownload": "sample,proof,["
 }
