@@ -1,12 +1,12 @@
 {
     "paths": {
-        "pathTvShows": "/mnt/TvShows/",
-        "pathDownloads": "/mnt/Downloads/",
-        "downloadList": "/mnt/Config/downloadList.json",
-        "dumpFile": "/mnt/Config/dumpFile.txt",
-        "matchedTvShows": "/mnt/Config/matchedTvShows.json",
-        "scannerList": "/mnt/Config/scannerList.json",
-        "storedFtp": "/mnt/Config/storedFtp.json"
+        "pathTvShows": "/media/daten/serien/",
+        "pathDownloads": "/media/daten/download/WebGet/",
+        "downloadList": "/media/daten/download/WebConf/downloadList.json",
+        "dumpFile": "/media/daten/download/WebConf/dumpFile.txt",
+        "matchedTvShows": "/media/daten/download/WebConf/matchedTvShows.json",
+        "scannerList": "/media/daten/download/WebConf/scannerList.json",
+        "storedFtp": "/media/daten/download/WebConf/storedFtp.json"
     },
-    "ignoreFromDownload": "sample,proof,[,nfo"
+    "ignoreFromDownload": "sample,proof"
 }

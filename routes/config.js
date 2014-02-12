@@ -106,7 +106,12 @@ exports.getIgnoreItems = function(cb){
     data = JSON.parse(data);
     //console.dir(data);
 
-    cb(err, data.ignoreFromDownload.split(','));
+    if (data.ignoreFromDownload.indexOf(',') > -1) {
+      data = data.ignoreFromDownload.split(',');
+    } else {
+      data = data.ignoreFromDownload;
+    }
+    cb(err, data);
   });
 };
 
