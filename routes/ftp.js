@@ -282,10 +282,7 @@ exports.initDownload = function(data,socket){
             if(err){
               console.log(err);
             }
-<<<<<<< HEAD
 
-=======
->>>>>>> aa7b05d41bde6da31e049e0836ed642fb0c7017e
             downloadAll(files, data[index].path, function (status) {
               if(status === 'next'){
                 console.log(status);
@@ -422,12 +419,8 @@ var recursivListFtpFilesFast = function(dir, scanType, socket, cb){
 var downloadAll = function(ftpFiles, folderPath, cb){
   size = 0;
   config.getDownloadPath(function(err, downloadFolder){
-<<<<<<< HEAD
     if(err)
       console.log(err);
-=======
-    //console.log(ftpFiles);
->>>>>>> aa7b05d41bde6da31e049e0836ed642fb0c7017e
     var downloadPath = downloadFolder + ftpFiles[0].name.substring(ftpFiles[0].name.indexOf(fsPath.basename(folderPath)),ftpFiles[0].name.length);
     mkdirp(fsPath.dirname(downloadPath), function(err) { 
       if(err) throw err;
