@@ -20,4 +20,7 @@ done:
 - add ignore from download to config page
 - downloads should be in there original folder
 - tls is hardcoded
+<<<<<<< HEAD
 - add speed and actual file in download tab when downlaod is active
+=======
+>>>>>>> aa7b05d41bde6da31e049e0836ed642fb0c7017e
