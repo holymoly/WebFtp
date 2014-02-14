@@ -57,6 +57,12 @@ function connect(){
                           ftpTls: ftpTls });
 };
 
+// Disconnect
+function disconnect(){
+  console.log('FTP disconnect');
+  socket.emit('discon');
+};
+
 // Triggers the login save of the server
 function saveFtp(){
   var ftpUrl = document.getElementById('textFtpUrl').value;

@@ -29,6 +29,9 @@ block content
             li(id='trash', ondrop='dropTrash(event)', ondragover='allowDrop(event)')
               a
                 span(class='glyphicon glyphicon-trash')
+            li
+              a
+                .btn.btn-block.btn-primary(onclick='disconnect()', value='disconnect') Disconnect
     div.container
       div.row
         div.col-md-2
