@@ -70,5 +70,6 @@ io.sockets.on('connection', function (socket) {
   socketEventsListers.checkTvShow(socket); 
   socketEventsListers.deleteDownloadItem(socket); 
   socketEventsListers.initConfigFiles(socket); 
+  socketEventsListers.discon(socket); 
   socket.on('disconnect', socketEventsListers.resetSessionSocket)
 });

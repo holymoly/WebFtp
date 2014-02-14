@@ -28,6 +28,14 @@ exports.connect = function(socket){
   });
 };
 
+// Triggers the disconnect
+exports.discon = function(socket){
+  socket.on('discon', function(data) {
+    ftp.discon();
+  });
+};
+
+
 // Triggers the connect
 exports.list = function(socket){
   socket.on('list', function(data) {
@@ -241,4 +249,3 @@ exports.emitUpdateDownlaodProgres = function(size, unit, fileName){
   if(sessionSocket !== undefined)
     sessionSocket.emit('updateDownlaodProgres',size, unit, fileName);
 };
-

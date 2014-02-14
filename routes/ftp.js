@@ -88,7 +88,14 @@ var connect = function(data,cb){
 };
 
 //disconnect from ftp
+exports.discon = function(){
+  console.log('FTP disconnect');
+  c.destroy();
+};
+
+//disconnect from ftp
 var disconnect = function(data){
+  console.log('Ftp disconnect');
   c.end();
 };
 
@@ -97,7 +104,7 @@ exports.list = function(path,socket){
   console.log('Path: ' + path);
   c.list(path, function(err, list) {
     if (err) throw err;
-    console.dir(list);
+    //console.dir(list);
     socketEventsListers.emitSetSubfolders(path, list);
   });
 };
