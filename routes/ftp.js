@@ -396,7 +396,7 @@ var recursivListFtpFilesFast = function(dir, scanType, socket, cb){
             //console.log('Added Item: ' + scanTodoArray.length + ' ' + file.name);
             socketEventsListers.emitScanFolderCounter(scanTodoArray.length);
             config.getDumpFile(function(err, dumpPath){ 
-              fs.appendFile(dumpPath, file.name + '  ' + file.date + '\n', function (err) {
+              fs.appendFile(dumpPath, file.name + '  ' + file.date.toLocal() + '\n', function (err) {
               });
             });
           
@@ -661,4 +661,14 @@ var deleteFromList = function(item, socket){
       });
     });
   });
+};
+
+Date.prototype.toLocal = function() {
+  var Year = this.getFullYear().toString();
+  var Month = (this.getMonth()+1).toString(); // getMonth() is zero-based
+  var Day  = this.getDate().toString();
+  var Hour  = this.getHours().toString();
+  var Minute  = this.getMinutes().toString();
+  var Second  = this.getSeconds().toString();
+  return Year + '-' + (Month[1]?Month:"0"+Month[0]) + '-' + (Day[1]?Day:"0"+Day[0]) + "_" + (Hour[1]?Hour:"0"+Hour[0]) + ":" + (Minute[1]?Minute:"0"+Minute[0]) + ":" + (Second[1]?Second:"0"+Second[0]);
 };
