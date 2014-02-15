@@ -26,9 +26,7 @@ block content
               a(href='/lostEpisodes') Lost Episodes  
             li
               a(href='/config') Config
-            li
-              a
-                .btn.btn-block.btn-primary(onclick='disconnect()', value='disconnect') Disconnect
+
     div.container
       label Paths
       div.tree.col-md-12(id='treeScanPaths')
@@ -46,13 +44,16 @@ block content
           label.checkbox
             input(type='checkbox', value='true', id='chkTls', name='FtpTls') 
             | TLS/SSL
+      div.row
         div.col-md-2
           .btn.btn-block.btn-primary(onclick='scanFtp()', value='Scan') Scan
-        div.col-md-1.col-md-offset-0
+        div.col-md-2.col-md-offset-0
+          .btn.btn-block.btn-primary(onclick='disconnect()', value='disconnect') Disconnect
+        div.col-md-2.col-md-offset-0
           .btn-group.btn-block
-            button.btn.block.btn-primary(data-toggle='dropdown', onclick='getStoredServers()') Server
+            button.btn.btn-block.btn-primary(data-toggle='dropdown', onclick='getStoredServers()') Server
               span.caret
-            ul.dropdown-menu(role='menu', id='foundedServers')  
+            ul.dropdown-menu(role='menu', id='foundedServers') 
       label(id='folderCounter') Results
       image(id='indicatorScanner',hidden=true, src='/pics/ajax-loader.gif')
       div.tree(id='treeScanResults')
