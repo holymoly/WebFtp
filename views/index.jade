@@ -26,13 +26,10 @@ block content
               a(href='/lostEpisodes') Lost Episodes
             li
               a(href='/config') Config
-            li
-              a
-                .btn.btn-block.btn-primary(onclick='disconnect()', value='disconnect') Disconnect
                
     div.container
       div.row
-        div.col-md-2
+        div.col-md-3
           input.form-control(id='textFtpUrl', type='text', name='FtpUrl', placeholder='FTP URL')
         div.col-md-2
           input.form-control(id='textPort', type='text', name='FtpPort', placeholder='FTP Port')
@@ -44,13 +41,16 @@ block content
           label.checkbox
             input(type='checkbox', value='true', id='chkTls', name='FtpTls') 
             | TLS/SSL
-        div.col-md-1.col-md-offset-0
+      div.row
+        div.col-md-2.col-md-offset-0
           .btn.btn-block.btn-primary(onclick='connect()', value='Connect') Connect
-        div.col-md-1.col-md-offset-0
+        div.col-md-2.col-md-offset-0
+          .btn.btn-block.btn-primary(onclick='disconnect()', value='disconnect') Disconnect
+        div.col-md-2.col-md-offset-0
           .btn.btn-block.btn-primary(onclick='saveFtp()', value='Save') Save   
-        div.col-md-1.col-md-offset-0
+        div.col-md-2.col-md-offset-0
           .btn-group.btn-block
-            button.btn.block.btn-primary(data-toggle='dropdown', onclick='getStoredServers()') Server
+            button.btn.btn-block.btn-primary(data-toggle='dropdown', onclick='getStoredServers()') Server
               span.caret
             ul.dropdown-menu(role='menu', id='foundedServers')  
       div.tree.col-md-12(id='treeSection')

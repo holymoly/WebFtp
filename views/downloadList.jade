@@ -29,12 +29,9 @@ block content
             li(id='trash', ondrop='dropTrash(event)', ondragover='allowDrop(event)')
               a
                 span(class='glyphicon glyphicon-trash')
-            li
-              a
-                .btn.btn-block.btn-primary(onclick='disconnect()', value='disconnect') Disconnect
     div.container
       div.row
-        div.col-md-2
+        div.col-md-3
           input.form-control(id='textFtpUrl', type='text', name='FtpUrl', placeholder='FTP URL')
         div.col-md-2
           input.form-control(id='textPort', type='text', name='FtpPort', placeholder='FTP Port')
@@ -46,13 +43,16 @@ block content
           label.checkbox
             input(type='checkbox', value='true', id='chkTls', name='FtpTls') 
             | TLS/SSL
+      div.row
         div.col-md-2.col-md-offset-0
           .btn.btn-block.btn-primary(onclick='initDownload()', value='Download') Download
-        div.col-md-1.col-md-offset-0
+        div.col-md-2.col-md-offset-0
+          .btn.btn-block.btn-primary(onclick='disconnect()', value='disconnect') Disconnect
+        div.col-md-2.col-md-offset-0
           .btn-group.btn-block
-            button.btn.block.btn-primary(data-toggle='dropdown', onclick='getStoredServers()') Server
+            button.btn.btn-block.btn-primary(data-toggle='dropdown', onclick='getStoredServers()') Server
               span.caret
-            ul.dropdown-menu(role='menu', id='foundedServers')  
+            ul.dropdown-menu(role='menu', id='foundedServers')   
       image(id='indicatorDownloader',hidden=true, src='/pics/ajax-loader.gif')
       label(id='downlaodProgres')
       div.tree.col-md-12
