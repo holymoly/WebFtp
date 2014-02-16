@@ -244,8 +244,8 @@ exports.emitInitScannerResultList = function(data){
 };
 
 // Update download progress
-exports.emitUpdateDownlaodProgres = function(size, unit, fileName){
+exports.emitUpdateDownlaodProgres = function(size, unit, fileName, left){
   //socketEventsListers.emitScanFolderCounter(scanTodoArray.length);
   if(sessionSocket !== undefined)
-    sessionSocket.emit('updateDownlaodProgres',size, unit, fileName);
+    sessionSocket.emit('updateDownlaodProgres',size, unit, fileName, left);
 };
