@@ -39,18 +39,28 @@ exports.initUnrar = function(folder){
 	});
 }
 
-var unrar = function(folder,file){
-  unrarProcess = childProcess.exec('unrar e ' + folder + '/' + file + ' ' + folder, function (error, stdout, stderr) {
-   if (error) {
-     console.log(error.stack);
-     console.log('Error code: '+error.code);
-     console.log('Signal received: '+error.signal);
-   }
-   console.log('Child Process STDOUT: '+stdout);
-   console.log('Child Process STDERR: '+stderr);
- });
+var unrar = function(folder,rarFile){
+  unrarProcess = childProcess.exec('unrar e ' + folder + '/' + rarFile + ' ' + folder, function (error, stdout, stderr) {
+    if (error) {
+      console.log(error.stack);
+      console.log('Error code: '+error.code);
+      console.log('Signal received: '+error.signal);
+    }
+    console.log('Child Process STDOUT: '+stdout);
+    console.log('Child Process STDERR: '+stderr);
 
- unrarProcess.on('exit', function (code) {
-   console.log('Child process exited with exit code ' + code);
- });
-};
+    fs.readdir(folder, function(err,files){
+      files.forEach(function(file) {
+        if(path.extname(file).indexOf('.r') !== -1){ 
+          fs.unlink( folder + '/' + file, function(){
+            console.log('Deleted file ' + file);
+          });
+        }
+      });
+    });
+  });
+ 
+  unrarProcess.on('exit', function (code) {
+    console.log('Child process exited with exit code ' + code);
+  });
+}
