@@ -55,7 +55,7 @@ exports.initRoot = function(data,socket){
   connect(data, function(){
     c.list(function(err, list) {
       if (err) throw err;
-      console.dir(list);
+      //console.dir(list);
       socketEventsListers.emitInitRoot(list);
     }); 
   });
@@ -105,6 +105,12 @@ exports.list = function(path,socket){
   c.list(path, function(err, list) {
     if (err) throw err;
     //console.dir(list);
+    list.forEach(function(item) {
+      if(typeof(item.date) !== 'undefined'){
+        item.date = item.date.toLocal() ;
+      }
+    });
+
     socketEventsListers.emitSetSubfolders(path, list);
   });
 };
@@ -188,7 +194,7 @@ exports.addToScannerList = function(newEntry,socket){
   });
 };
 
-// When requested send dowloadlist to client
+// When requested send Scan items to client
 exports.initScannerList = function(socket){
   config.getScannerList(function(err, path){  
     fs.readFile(path, 'utf8', function (err, data) {
@@ -243,6 +249,7 @@ exports.scanFtp = function(data, socket){
 
 // When requested send scanner results to to client
 exports.initScannerResultList = function(socket){
+  result = undefined;
   config.getDumpFile(function(err, dumpPath){ 
     fs.readFile(dumpPath, 'utf8', function (err, data) {
       if (err) {
@@ -250,8 +257,7 @@ exports.initScannerResultList = function(socket){
         socketEventsListers.emitInitScannerResultList('er');
         return;
       } else {
-       //data = JSON.parse(data);
-       socketEventsListers.emitInitScannerResultList(data);
+        socketEventsListers.emitInitScannerResultList(data);
       }
     });
   });
@@ -270,7 +276,6 @@ exports.initDownload = function(data,socket){
         } else {
           data = JSON.parse(data);
           //Find file for each downloadlist entry
-          
           console.log('*******Sart Download*******');
           oneDownloadAfterTheOther(data,0);
         }
@@ -496,7 +501,7 @@ var downloadAll = function(ftpFiles, folderPath, cb){
                     calcSize = size/1048576;
                     unit = 'MB'
                   }
-                  socketEventsListers.emitUpdateDownlaodProgres(calcSize.toFixed(1), unit, fsPath.basename(ftpFiles[0].name));
+                  socketEventsListers.emitUpdateDownlaodProgres(calcSize.toFixed(1), unit, fsPath.basename(ftpFiles[0].name), ftpFiles.length);
                 });
 
               });
@@ -619,7 +624,7 @@ var downloadAppendToFile = function(ftpFile, folderPath, offset, cb){
             calcSize = size/1048576;
             unit = 'MB'
           }
-          socketEventsListers.emitUpdateDownlaodProgres(calcSize.toFixed(1), unit, fsPath.basename(ftpFile));
+          socketEventsListers.emitUpdateDownlaodProgres(calcSize.toFixed(1), unit, fsPath.basename(ftpFile.name) + ' (append)', 0);
         });
       });
     });

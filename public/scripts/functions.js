@@ -201,7 +201,6 @@ socket.on('initialFolderFtp', function(data){
 socket.on('setSubfolders', function(path,data){
 
   Items = data;
-
   //console.log(data);
   for (var i = 0; i < Items.length; i++){
     //check if folder
@@ -223,7 +222,7 @@ socket.on('setSubfolders', function(path,data){
         li.setAttribute('data-type', 'file');
       }
 
-      div.innerHTML = div.innerHTML + ' ' + Items[i].name;
+      div.innerHTML = div.innerHTML + ' ' + Items[i].name  + ' ' + Items[i].date;
 
       span.appendChild(div);
       span.setAttribute('data-name', path + '/' +  Items[i].name);
@@ -238,6 +237,24 @@ socket.on('setSubfolders', function(path,data){
     }
   }
 });
+
+function sortObject(o) {
+    var sorted = {},
+    key, a = [];
+
+    for (key in o) {
+      if (o.hasOwnProperty(key)) {
+        a.push(key);
+      }
+    }
+
+    a.sort();
+
+    for (key = 0; key < a.length; key++) {
+      sorted[a[key]] = o[a[key]];
+    }
+    return sorted;
+}
 
 //Receiving and updatimg count of download list items
 socket.on('updateCountDownloadList', function(data){
@@ -274,7 +291,6 @@ function checkSubfolders(data){
 
   var parentNode = data.parentNode;
   var childs = parentNode.childNodes;
-
   //If one ask ftp for subfolders
   if (childs.length <= 2){
     socket.emit('list',data.dataset.name);
@@ -650,8 +666,8 @@ socket.on('scanFolderCounter', function(data){
 });
 
 //Updating Couter for folders to scan
-socket.on('updateDownlaodProgres', function(size, unit, fileName){
+socket.on('updateDownlaodProgres', function(size, unit, fileName, left){
   //console.log(size);
-  if(document.contains(document.getElementById('downlaodProgres')))
-    document.getElementById('downlaodProgres').innerHTML = size + unit + ' of ' + fileName;
+   if(document.contains(document.getElementById('downlaodProgres')))
+    document.getElementById('downlaodProgres').innerHTML = size + unit + ' of ' + fileName + ' [' + left + ' Files left]';
 });
