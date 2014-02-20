@@ -40,7 +40,12 @@ exports.initUnrar = function(folder){
 }
 
 var unrar = function(folder,rarFile){
+  var startTime = new Date().getTime();
+  var endTime = undefined;
+
   unrarProcess = childProcess.exec('unrar x ' + folder + '/' + rarFile + ' ' + folder, function (error, stdout, stderr) {
+    endTime = new Date().getTime();
+
     if (error) {
       console.log(error.stack);
       console.log('Error code: '+error.code);
@@ -48,13 +53,13 @@ var unrar = function(folder,rarFile){
     }
     console.log('Child Process STDOUT: '+stdout);
     console.log('Child Process STDERR: '+stderr);
-
+    console.log('Duration of unrar: ' + ((endTime - startTime)/1000) + 's');
     fs.readdir(folder, function(err,files){
       files.forEach(function(file) {
         if(path.extname(file).indexOf('.r') !== -1){ 
-          //fs.unlink( folder + '/' + file, function(){
-          //  console.log('Deleted file ' + file);
-          //});
+          fs.unlink( folder + '/' + file, function(){
+            console.log('Deleted file ' + file);
+          });
         }
       });
     });
