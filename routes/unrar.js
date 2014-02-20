@@ -40,7 +40,7 @@ exports.initUnrar = function(folder){
 }
 
 var unrar = function(folder,rarFile){
-  unrarProcess = childProcess.exec('unrar e ' + folder + '/' + rarFile + ' ' + folder, function (error, stdout, stderr) {
+  unrarProcess = childProcess.exec('unrar x ' + folder + '/' + rarFile + ' ' + folder, function (error, stdout, stderr) {
     if (error) {
       console.log(error.stack);
       console.log('Error code: '+error.code);
@@ -52,9 +52,9 @@ var unrar = function(folder,rarFile){
     fs.readdir(folder, function(err,files){
       files.forEach(function(file) {
         if(path.extname(file).indexOf('.r') !== -1){ 
-          fs.unlink( folder + '/' + file, function(){
-            console.log('Deleted file ' + file);
-          });
+          //fs.unlink( folder + '/' + file, function(){
+          //  console.log('Deleted file ' + file);
+          //});
         }
       });
     });
