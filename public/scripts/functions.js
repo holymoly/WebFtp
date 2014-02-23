@@ -238,24 +238,6 @@ socket.on('setSubfolders', function(path,data){
   }
 });
 
-function sortObject(o) {
-    var sorted = {},
-    key, a = [];
-
-    for (key in o) {
-      if (o.hasOwnProperty(key)) {
-        a.push(key);
-      }
-    }
-
-    a.sort();
-
-    for (key = 0; key < a.length; key++) {
-      sorted[a[key]] = o[a[key]];
-    }
-    return sorted;
-}
-
 //Receiving and updatimg count of download list items
 socket.on('updateCountDownloadList', function(data){
   counterHtml = document.getElementById('listCounterDownload');
@@ -291,9 +273,10 @@ function checkSubfolders(data){
 
   var parentNode = data.parentNode;
   var childs = parentNode.childNodes;
+  var sort = document.getElementById('chkSorted').checked;
   //If one ask ftp for subfolders
   if (childs.length <= 2){
-    socket.emit('list',data.dataset.name);
+    socket.emit('list',data.dataset.name,sort);
   }else{
     //hide or show subfolders
     for(i=0; i < childs.length; i++)

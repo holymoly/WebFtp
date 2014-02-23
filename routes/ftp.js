@@ -100,17 +100,22 @@ var disconnect = function(data){
 };
 
 //List folder
-exports.list = function(path,socket){
+exports.list = function(path,sort,socket){
   console.log('Path: ' + path);
+  console.log('Sort: ' + sort);
   c.list(path, function(err, list) {
     if (err) throw err;
-    //console.dir(list);
+    //console.log(list);
+    list.shift();
+    
     list.forEach(function(item) {
       if(typeof(item.date) !== 'undefined'){
         item.date = item.date.toLocal() ;
       }
     });
-
+    if(sort === true){
+      list.sort(sort_by('date', false, function(a){return a.toUpperCase()}));
+    }
     socketEventsListers.emitSetSubfolders(path, list);
   });
 };
@@ -677,3 +682,14 @@ Date.prototype.toLocal = function() {
   var Second  = this.getSeconds().toString();
   return Year + '-' + (Month[1]?Month:"0"+Month[0]) + '-' + (Day[1]?Day:"0"+Day[0]) + "_" + (Hour[1]?Hour:"0"+Hour[0]) + ":" + (Minute[1]?Minute:"0"+Minute[0]) + ":" + (Second[1]?Second:"0"+Second[0]);
 };
+
+//Sorting function
+var sort_by = function(field, reverse, primer){
+   var key = primer ? 
+       function(x) {return primer(x[field])} : 
+       function(x) {return x[field]};
+   reverse = [-1, 1][+!!reverse];
+   return function (a, b) {
+       return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
+    } 
+}
