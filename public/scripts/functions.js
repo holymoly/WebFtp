@@ -515,26 +515,35 @@ socket.on('TvShowResultList', function(data, originname){
 
       ul.appendChild(li);
     }
+
     //document.getElementById('TvShowResultTree').removeChild(0);
     root.appendChild(ul);  
+    addManualSearch(originname);
   }else{
-    var input = document.createElement('input');
-    var button = document.createElement('input');
-
-    input.setAttribute('class','form-control');
-    input.setAttribute('id','textManualTvShowInput');
-    input.setAttribute('placeholder','not found, type in Tv Show Name');
-    input.setAttribute('data-originname', originname);
-
-    button.setAttribute('class','btn btn-block btn-primary');
-    button.setAttribute('value','Search manual');
-    button.setAttribute('onclick', 'checkTvShow("manual")');
-    button.innerHTML = button.innerHTML + 'Search manual';
-
-    root.appendChild(input);
-    root.appendChild(button);
+    addManualSearch(originname);
   }
 });
+
+//add manual search field
+function addManualSearch(originname){
+  var root = document.getElementById('TvShowResultTree');
+  var input = document.createElement('input');
+  var button = document.createElement('input');
+
+  input.setAttribute('class','form-control');
+  input.setAttribute('id','textManualTvShowInput');
+  input.setAttribute('placeholder','not found, type in Tv Show Name');
+  input.setAttribute('data-originname', originname);
+
+  button.setAttribute('class','btn btn-block btn-primary');
+  button.setAttribute('value','Search manual');
+  button.setAttribute('onclick', 'checkTvShow("manual")');
+  button.innerHTML = button.innerHTML + 'Search manual';
+
+  root.appendChild(input);
+  root.appendChild(button);
+}
+
 
 //Drop finished for Tv Show off/online match
 function dropTvShowMatch(ev){
