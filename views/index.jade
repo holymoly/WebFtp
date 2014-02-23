@@ -53,5 +53,9 @@ block content
             button.btn.btn-block.btn-primary(data-toggle='dropdown', onclick='getStoredServers()') Server
               span.caret
             ul.dropdown-menu(role='menu', id='foundedServers')  
+        div.col-md-2
+          label.checkbox
+            input(type='checkbox', value='true', id='chkSorted', name='sortByDate') 
+            | sort by date
       div.tree.col-md-12(id='treeSection')
     div.footer

@@ -38,8 +38,8 @@ exports.discon = function(socket){
 
 // Triggers the connect
 exports.list = function(socket){
-  socket.on('list', function(data) {
-    ftp.list(data,socket);
+  socket.on('list', function(data, sort) {
+    ftp.list(data,sort,socket);
   });
 };
 
