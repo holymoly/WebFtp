@@ -1,15 +1,7 @@
 todo:
 
 - Colored output for console.logs (highlights files, sizes and amount while of console.log while downloading)
-<<<<<<< HEAD
 - show files for download item in download view when downloads was started
-=======
-- add speed and actual file in download tab when downlaod is active
-    eingelesene Ordnerstruktur (files und Ordner) in die Downloadliste zurück schreiben und somit den aktuellen fortschritt anzeigen
->>>>>>> 4a8cdfe33056f83725bbdd2ef646d0ec81fac7b2
-- add pogressbar and indicator if conection/download is active
-
-
 
 done:
 - unify ftp login for all connections (Browser, Scan, Download)
@@ -20,7 +12,5 @@ done:
 - add ignore from download to config page
 - downloads should be in there original folder
 - tls is hardcoded
-<<<<<<< HEAD
 - add speed and actual file in download tab when downlaod is active
-=======
->>>>>>> aa7b05d41bde6da31e049e0836ed642fb0c7017e
+- add pogressbar and indicator if conection/download is active

@@ -27,6 +27,10 @@ function initDownloadList(){
 //Init scanner List with items
 function initScannerList(){
   socket.emit('initScannerList');
+};
+
+//Init scanner Result List with items
+function initScannerResultList(){
   socket.emit('initScannerResultList');
 };
 
@@ -399,12 +403,15 @@ socket.on('initialScannerFolder', function(data){
 
 //Showing results of scan 
 socket.on('initialScannerResultList', function(data){
-
+  var Result = document.getElementById('treeScanResults');
+  while (Result.firstChild) {
+    Result.removeChild(Result.firstChild);
+  }
   var div = document.createElement('div');
   div.setAttribute('class', 'wordwrap');
   div.innerHTML = data;
   
-  document.getElementById('treeScanResults').appendChild(div);  
+  Result.appendChild(div);  
 });
 
 //Start scanning of FTP
