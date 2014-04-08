@@ -235,7 +235,7 @@ var findEpisodes = function(tvShowName,episodesArray, cb) {
       folderArray.forEach(function(folder) {
         episodesArray.forEach(function(episode) {
           if(folder.indexOf(episode) > -1){
-            if(folder.replace(/\./g,' ').indexOf(tvShowName) > -1 ){
+            if(folder.replace(/\./g,' ').toUpperCase().indexOf(tvShowName.toUpperCase()) > -1 ){
               //Cut of time and only submit folder name
               cb(folder.split('  ')[0]);
             }
