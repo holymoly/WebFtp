@@ -12,7 +12,5 @@
     "socket.io": "~0.9.16",
     "thetvdb-api": "~0.1.0",
     "mkdirp": "~0.3.5",
-    "rarjs": "0.0.2",
-    "rarfile": "~0.2.1-3"
   }
 }
