@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/holymoly/WebFtp.svg?branch=master)
+[![Build Status](https://travis-ci.org/holymoly/WebFtp.svg?branch=master)]
 
 WebFtp
 ======
