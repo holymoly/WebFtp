@@ -1,0 +1,62 @@
+extends layout 
+
+block content
+  body(onload='initScanner()')
+    div.navbar.navbar-default.navbar-fixed-top
+      div.container
+        div.navbar-header
+          a(data-toggle='collapse', data-target='.navbar-collapse').btn.navbar-toggle
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a(href='/').navbar-brand #{title}
+        div.navbar-collapse.collapse
+          ul.nav.navbar-nav
+            li
+              a(href='/') FTP Browser
+            li(id='downloadList')
+              a.downloadBox(href='/downloadList') Download List
+               span.pink(id='listCounterDownload') 0
+            li.active(id='scanner')
+              a.downloadBox(href='/scanner') Scanner
+               span.blue(id='listCounterScanner') 0
+            li
+              a(href='/tvShows') Tv Shows
+            li
+              a(href='/lostEpisodes') Lost Episodes  
+            li
+              a(href='/config') Config
+
+    div.container
+      label Paths
+      div.tree.col-md-12(id='treeScanPaths')
+
+      div.row
+        div.col-md-3
+          input.form-control(id='textFtpUrl', type='text', name='FtpUrl', placeholder='FTP URL')
+        div.col-md-2
+          input.form-control(id='textPort', type='text', name='FtpPort', placeholder='FTP Port')
+        div.col-md-2
+          input.form-control(id='textUser', type='text', name='FtpUser', placeholder='User')
+        div.col-md-2
+          input.form-control(id='textPass', type='password', name='FtpPass', placeholder='Password')
+        div.col-md-1
+          label.checkbox
+            input(type='checkbox', value='true', id='chkTls', name='FtpTls') 
+            | TLS/SSL
+      div.row
+        div.col-md-3
+          .btn.btn-block.btn-primary(onclick='scanFtp()', value='Scan') Scan
+        div.col-md-2.col-md-offset-0
+          .btn.btn-block.btn-primary(onclick='disconnect()', value='disconnect') Disconnect
+        div.col-md-2.col-md-offset-0
+          .btn-group.btn-block
+            button.btn.btn-block.btn-primary(data-toggle='dropdown', onclick='getStoredServers()') Server
+              span.caret
+            ul.dropdown-menu(role='menu', id='foundedServers')
+        div.col-md-2.col-md-offset-0
+          .btn.btn-block.btn-primary(onclick='initScannerResultList()', value='initScanner') Results
+      label(id='folderCounter') Results
+      image(id='indicatorScanner',hidden=true, src='/pics/ajax-loader.gif')
+      div.tree(id='treeScanResults')
+    div.footer
