@@ -6,11 +6,16 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "express": "3.4.4",
-    "jade": "~0.35.0",
-    "ftp": "~0.3.4",
-    "socket.io": "~0.9.16",
-    "thetvdb-api": "~0.1.0",
-    "mkdirp": "~0.3.5"
+    "body-parser": "^1.17.1",
+    "errorhandler": "^1.5.0",
+    "express": "4.15.2",
+    "ftp": "git+https://github.com/holymoly/node-ftp.git",
+    "method-override": "^2.3.7",
+    "mkdirp": "~0.3.5",
+    "morgan": "^1.8.1",
+    "node-tvdb": "^3.1.1",
+    "pug": "^2.0.0-beta11",
+    "serve-favicon": "^2.4.1",
+    "socket.io": "^1.7.3"
   }
 }

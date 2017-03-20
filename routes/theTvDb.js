@@ -3,7 +3,7 @@ var fs = require('fs');
 //var dumpFile = './store/dumpFile.txt';
 var config = require('./config');
 
-var tvDB    = require("thetvdb-api"),
+var tvDB    = require("node-tvdb"),
     key     = "3928F2D970CE9931";
 
 
