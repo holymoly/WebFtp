@@ -34,7 +34,7 @@ exports.save = function(newEntry){
         console.log('Error: ' + err);
         return;
       }
-   
+
       data = JSON.parse(data);
       data.push(newEntry);
 
@@ -44,26 +44,27 @@ exports.save = function(newEntry){
         } else {
           console.log("JSON saved");
         }
-      }); 
+      });
     });
   });
 };
 
 //Connect to Server
 exports.initRoot = function(data,socket){
-  //console.log(data); 
+  //console.log(data);
   connect(data, function(){
     c.list(function(err, list) {
       if (err) throw err;
       //console.dir(list);
       socketEventsListers.emitInitRoot(list);
-    }); 
+    });
   });
 };
 
 //connect to ftp
 var connect = function(data,cb){
-  if(c.connected === false){  
+  console.log(data);
+  if(c.connected === false){
     c.once('ready', function() {
       cb();
     });
@@ -77,7 +78,7 @@ var connect = function(data,cb){
     // connect to localhost:21 as anonymous
     c.connect({ host: ftpUrl,
                 port: ftpPort,
-                secure: ftpTls, 
+                secure: ftpTls,
                 secureOptions: {rejectUnauthorized: false},
                 user: ftpUser,
                 password: ftpPass });
@@ -107,7 +108,7 @@ exports.list = function(path,sort,socket){
     if (err) throw err;
     //console.log(list);
     list.shift();
-    
+
     list.forEach(function(item) {
       if(typeof(item.date) !== 'undefined'){
         item.date = item.date.toLocal() ;
@@ -122,7 +123,7 @@ exports.list = function(path,sort,socket){
 
 // Insert Entry into downloadlist
 exports.addToDownloadList = function(newEntry,socket){
-  
+
   console.log(newEntry);
   config.getDownloadList(function(err, path){
     fs.readFile(path, 'utf8', function (err, data) {
@@ -172,7 +173,7 @@ exports.initDownloadList = function(socket){
 // Insert Entry into scannerlist
 exports.addToScannerList = function(newEntry,socket){
   console.log(newEntry);
-  config.getScannerList(function(err, path){  
+  config.getScannerList(function(err, path){
     fs.readFile(path, 'utf8', function (err, data) {
       if (err) {
         console.log('Error: ' + err);
@@ -201,7 +202,7 @@ exports.addToScannerList = function(newEntry,socket){
 
 // When requested send Scan items to client
 exports.initScannerList = function(socket){
-  config.getScannerList(function(err, path){  
+  config.getScannerList(function(err, path){
     fs.readFile(path, 'utf8', function (err, data) {
       if (err) {
         console.log('Error: ' + err);
@@ -219,17 +220,17 @@ exports.initScannerList = function(socket){
 // When requested scan
 exports.scanFtp = function(data, socket){
   connect(data,function(){
-    config.getDumpFile(function(err, dumpPath){ 
+    config.getDumpFile(function(err, dumpPath){
       var datetime = new Date();
       var backupName = dumpPath + '_' + datetime.getFullYear() + '_' + (datetime.getMonth() + 1) + '_' + datetime.getDate() + '_' + datetime.getHours()  + '_' + datetime.getMinutes() + '_' + datetime.getSeconds();
       //backup old file
-    
+
       fs.rename(dumpPath, backupName, function (err) {
         fs.writeFile(dumpPath, '', function(){
           if (err) throw err;
           console.log('Old dump file saved to: ' + backupName);
           //read paths to scann
-          config.getScannerList(function(err, path){  
+          config.getScannerList(function(err, path){
             fs.readFile(path, 'utf8', function (err, data) {
               if (err) {
                 console.log('Error during reading of scanner file: ' + err);
@@ -244,18 +245,18 @@ exports.scanFtp = function(data, socket){
                   });
                 });
               }
-            }); 
-          });       
+            });
+          });
         });
-      }); 
-    }); 
+      });
+    });
   });
 };
 
 // When requested send scanner results to to client
 exports.initScannerResultList = function(socket){
   result = undefined;
-  config.getDumpFile(function(err, dumpPath){ 
+  config.getDumpFile(function(err, dumpPath){
     fs.readFile(dumpPath, 'utf8', function (err, data) {
       if (err) {
         console.log('Error: ' + err);
@@ -291,7 +292,7 @@ exports.initDownload = function(data,socket){
       indicatorDownloader = false;
       socketEventsListers.emitUpdateIndicator({type: 'indicatorDownloader', hidden: indicatorDownloader});
 
-      if(index < data.length){  
+      if(index < data.length){
         //Check if folder or file
         if(data[index].type === 'folder'){
           recursivListFtpFiles(data[index].path, 'downloadScan', function (err, files) {
@@ -348,11 +349,11 @@ var recursivListFtpFiles = function(dir,scanType,done){
     (function next() {
       var file = list[i++];
       if (!file) return done(null, ftpFiles);
-      
+
       file.name = dir + '/' + file.name;
        if (file.type === 'd'){
           if(scanType === 'ftpScan' & file.name.toUpperCase().indexOf('SAMPLE') === -1 & file.name.indexOf('[SAS') === -1 & file.name.toUpperCase().indexOf('SUBS') === -1 & file.name.toUpperCase().indexOf('PROOF') === -1){
-            config.getDumpFile(function(err, dumpPath){ 
+            config.getDumpFile(function(err, dumpPath){
               fs.appendFile(dumpPath, file.name + '  ' + file.date + '\n', function (err) {
               });
             });
@@ -391,25 +392,25 @@ var recursivListFtpFilesFast = function(dir, scanType, socket, cb){
     }
     if (typeof(list) !== 'undefined'){
       //build array with items to check
-      
+
       list.forEach(function(file) {
 
         file.name = dir + '/' + file.name;
         if (file.type === 'd'){
           // Scan for folder on ftp
-         
-          if(scanType === 'ftpScan' & file.name.toUpperCase().indexOf('SAMPLE') === -1 
-                                    & file.name.indexOf('[') === -1 
-                                    & file.name.toUpperCase().indexOf('SUBS') === -1 
+
+          if(scanType === 'ftpScan' & file.name.toUpperCase().indexOf('SAMPLE') === -1
+                                    & file.name.indexOf('[') === -1
+                                    & file.name.toUpperCase().indexOf('SUBS') === -1
                                     & file.name.toUpperCase().indexOf('PROOF') === -1){
             scanTodoArray.push(file.name);
             //console.log('Added Item: ' + scanTodoArray.length + ' ' + file.name);
             socketEventsListers.emitScanFolderCounter(scanTodoArray.length);
-            config.getDumpFile(function(err, dumpPath){ 
+            config.getDumpFile(function(err, dumpPath){
               fs.appendFile(dumpPath, file.name + '  ' + file.date.toLocal() + '\n', function (err) {
               });
             });
-          
+
             recursivListFtpFilesFast(file.name, scanType ,  socket, function(err, res) {
               if(err){
                 console.log('Error scanning Folder: ' + file.name);
@@ -418,7 +419,7 @@ var recursivListFtpFilesFast = function(dir, scanType, socket, cb){
               scanTodoArray.splice(scanTodoArray.indexOf(file.name) ,1);
               //console.log('Removed Item: ' + scanTodoArray.length + ' ' + file.name);
               socketEventsListers.emitScanFolderCounter(scanTodoArray.length);
-            
+
             });
           }
         }
@@ -439,14 +440,14 @@ var downloadAll = function(ftpFiles, folderPath, cb){
     if(err)
       console.log(err);
     var downloadPath = downloadFolder + ftpFiles[0].name.substring(ftpFiles[0].name.indexOf(fsPath.basename(folderPath)),ftpFiles[0].name.length);
-    mkdirp(fsPath.dirname(downloadPath), function(err) { 
+    mkdirp(fsPath.dirname(downloadPath), function(err) {
       if(err) throw err;
       console.log('Download to: ' + downloadPath);
       //Only download complete if file not exists or should be ignored elsewise skip or append
       checkIfFileAlreadyExists(downloadPath, function(status){
         config.getIgnoreItems(function(err, ignoerSubstrings){
           //check if file should be ignored
-          //console.log(ignoerSubstrings);   
+          //console.log(ignoerSubstrings);
           checkIfFileShouldBeIgnored(ftpFiles[0].name,ignoerSubstrings,function(ignored){
             //console.log(ignored);
             if (status === 'not found' & ignored === false){
@@ -455,7 +456,7 @@ var downloadAll = function(ftpFiles, folderPath, cb){
                                                                   , 'mode': 0775
                                                                   });
               //Emitted when file is completed on disk
-              fileStream.once('finish', function() { 
+              fileStream.once('finish', function() {
                 //**** Print Results and compare online and local size
                 console.log('Download of ' + fsPath.basename(ftpFiles[0].name) +' finished');
                 console.log('Size online: ' + ftpFiles[0].size);
@@ -479,17 +480,17 @@ var downloadAll = function(ftpFiles, folderPath, cb){
                 });
               });
 
-              fileStream.once('error', function(error) { 
+              fileStream.once('error', function(error) {
                 console.log(error);
               });
 
               c.get(ftpFiles[0].name, function(err, stream) {
                 size = 0;
                 //console.log(ftpFiles[0]);
-                stream.pipe(fileStream); 
+                stream.pipe(fileStream);
                 if (err) throw err;
                 console.log('Download of ' + fsPath.basename(ftpFiles[0].name) +' started');
-                
+
                 stream.once('error', function (error) {
                   console.log(error);
                 });
@@ -530,7 +531,7 @@ var downloadAll = function(ftpFiles, folderPath, cb){
                 removeFileFromArray(downloadPath);
               }
             }
-          }); 
+          });
         });
       });
     });
@@ -539,7 +540,7 @@ var downloadAll = function(ftpFiles, folderPath, cb){
   function removeFileFromArray(file){
     ftpFiles.splice(0,1);
     console.log('Files to download: ' + ftpFiles.length);
-    
+
     if(ftpFiles.length === 0){
       console.log('Download of Item completed');
       unrar.initUnrar(fsPath.dirname(file));
@@ -575,7 +576,7 @@ var downloadAll = function(ftpFiles, folderPath, cb){
         found = true;
         cb(found);
       }
-      next(); 
+      next();
     })();
   };
 //***************
@@ -583,8 +584,8 @@ var downloadAll = function(ftpFiles, folderPath, cb){
 
 // Downnload file from List and start over if more items available
 var downloadAppendToFile = function(ftpFile, folderPath, offset, cb){
-  
-  
+
+
   config.getDownloadPath(function(err, downloadFolder){
     var downloadPath = downloadFolder + ftpFile.name.substring(ftpFile.name.indexOf(fsPath.basename(folderPath)),ftpFile.name.length)
     //console.log('***************************');
@@ -598,7 +599,7 @@ var downloadAppendToFile = function(ftpFile, folderPath, offset, cb){
                                                         , 'encoding': null
                                                         });
     //Emitted when file is completed on disk
-    fileStream.once('finish', function() { 
+    fileStream.once('finish', function() {
       console.log('Append of ' + fsPath.basename(ftpFile.name) +' finished');
       console.log('Size online: ' + ftpFile.size);
       fs.stat(downloadPath, function (err, stats) {
@@ -685,11 +686,11 @@ Date.prototype.toLocal = function() {
 
 //Sorting function
 var sort_by = function(field, reverse, primer){
-   var key = primer ? 
-       function(x) {return primer(x[field])} : 
+   var key = primer ?
+       function(x) {return primer(x[field])} :
        function(x) {return x[field]};
    reverse = [-1, 1][+!!reverse];
    return function (a, b) {
        return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
-    } 
+    }
 }

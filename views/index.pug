@@ -1,4 +1,4 @@
-extends layout 
+extends layout
 
 block content
   body(onload='initCounter()')
@@ -26,7 +26,7 @@ block content
               a(href='/lostEpisodes') Lost Episodes
             li
               a(href='/config') Config
-               
+
     div.container
       div.row
         div.col-md-3
@@ -39,7 +39,7 @@ block content
           input.form-control(id='textPass', type='password', name='FtpPass', placeholder='Password')
         div.col-md-1
           label.checkbox
-            input(type='checkbox', value='true', id='chkTls', name='FtpTls') 
+            input(type='checkbox', value='true', id='chkTls', name='FtpTls')
             | TLS/SSL
       div.row
         div.col-md-3.col-md-offset-0
@@ -47,15 +47,16 @@ block content
         div.col-md-2.col-md-offset-0
           .btn.btn-block.btn-primary(onclick='disconnect()', value='disconnect') Disconnect
         div.col-md-2.col-md-offset-0
-          .btn.btn-block.btn-primary(onclick='saveFtp()', value='Save') Save   
+          .btn.btn-block.btn-primary(onclick='saveFtp()', value='Save') Save
         div.col-md-2.col-md-offset-0
           .btn-group.btn-block
             button.btn.btn-block.btn-primary(data-toggle='dropdown', onclick='getStoredServers()') Server
               span.caret
-            ul.dropdown-menu(role='menu', id='foundedServers')  
+            ul.dropdown-menu(role='menu', id='foundedServers')
         div.col-md-2
           label.checkbox
-            input(type='checkbox', value='true', id='chkSorted', name='sortByDate') 
+            input(type='checkbox', value='true', id='chkSorted', name='sortByDate')
             | sort by date
+        image(id='indicatorWait',hidden=true, src='/pics/ajax-loader.gif')
       div.tree.col-md-12(id='treeSection')
     div.footer

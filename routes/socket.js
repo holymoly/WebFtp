@@ -11,8 +11,9 @@ var sessionSocket = undefined;
 //var storedServerFile = './store/storedFtp.json';
 
 // Set session socket
-exports.setSessionSocket = function(socket){
+exports.setSessionSocket = function(socket,cb){
   sessionSocket = socket;
+  cb();
 };
 
 // Reset session socket
@@ -21,9 +22,18 @@ exports.resetSessionSocket = function(){
   sessionSocket = undefined;
 };
 
+
+// Triggers the connect
+exports.error = function(socket){
+  socket.on('error', function(err) {
+    console.log(err);
+  });
+};
+
 // Triggers the connect
 exports.connect = function(socket){
-  socket.on('connect', function(data) {
+  socket.on('connec', function(data) {
+    socket.emit('Wait');
     ftp.initRoot(data,socket);
   });
 };
