@@ -4,7 +4,7 @@ var fs = require('fs');
 var config = require('./config');
 
 var theTvDB    = require("node-tvdb"),
-    key     = "blahblah";
+    key     = "50B3C9F288569DDE";
 
 var tvDB = new theTvDB(key);
 
