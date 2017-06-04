@@ -55,10 +55,10 @@ exports.checkTvShow = function(data,socket){
         if (tvShows.length === undefined){
           var tempArray = [];
           tempArray.push(tvShows);
-          socket.emit('TvShowResultList', tempArray,  data.name);
+          socket.emit('TvShowResultList', tempArray,  data.originname);
         }
         else{
-          socket.emit('TvShowResultList', tvShows,  data.name);
+          socket.emit('TvShowResultList', tvShows,  data.originname);
         }
   })
   .catch(error => {
