@@ -53,7 +53,7 @@ var io = require('socket.io').listen(server);
 //io.set('log level', 1); // reduce logging
 
 // Creating listeners and events on client socket connection
-io.set('log level', 1); // reduce logging
+io.set('log level', 3); // reduce logging
 io.sockets.on('connection', function (socket) {
 
   // Add listener for ftp events
