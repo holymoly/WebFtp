@@ -3,9 +3,10 @@ var fs = require('fs');
 //var dumpFile = './store/dumpFile.txt';
 var config = require('./config');
 
-var tvDB    = require("thetvdb-api"),
-    key     = "3928F2D970CE9931";
+var theTvDB    = require("node-tvdb"),
+    key     = "xxxxx";
 
+var tvDB = new theTvDB(key);
 
 // When requested send scanner results to to client
 exports.initTvShowList = function(socket){
@@ -30,9 +31,9 @@ exports.initTvShowList = function(socket){
 
               data.forEach(function (item){
                 socket.emit('initialTvShowResultList', item);
-              
+
                 //Check if TvShow already exists and delete if so
-                matchedData.forEach(function(matchdedItem) {            
+                matchedData.forEach(function(matchdedItem) {
                   if(matchdedItem.originname == item ){
                      socket.emit('markMatchedTvShow', item);
                   }
@@ -48,40 +49,37 @@ exports.initTvShowList = function(socket){
 
 //Get Tv Show Names
 exports.checkTvShow = function(data,socket){
-  tvDB(key).getSeries(data.name, function(err, tvShows) {
-    if (!err) {
-      console.log(data);
-      //Check if Series was found
-      if (tvShows.Data.Series !== undefined){
-        //Check if more than one was found  
-        if (tvShows.Data.Series.length === undefined){
+  console.log("Deb: " + data.name);
+  console.log("Deb: " + data.originname);	
+  tvDB.getSeriesByName(data.name)
+      .then(tvShows => {
+        console.log(tvShows);
+        if (tvShows.length === undefined){
           var tempArray = [];
-          tempArray.push(tvShows.Data.Series);
+          tempArray.push(tvShows);
           socket.emit('TvShowResultList', tempArray,  data.originname);
         }
         else{
-          socket.emit('TvShowResultList', tvShows.Data.Series,  data.originname);
+          socket.emit('TvShowResultList', tvShows,  data.originname);
         }
-      }
-      else{
-        //nothing was found
-        var tempArray = [{ seriesid: 0,
-                           language: '',
-                           SeriesName: 'not found',
-                           banner: '',
-                           FirstAired: '',
-                           Network: '',
-                           IMDB_ID: '',
-                           id: 0 }];
-        socket.emit('TvShowResultList', tempArray, data.originname);
-      }
-    }
+  })
+  .catch(error => {
+    //nothing was found
+    var tempArray = [{ seriesid: 0,
+                       language: '',
+                       SeriesName: 'not found',
+                       banner: '',
+                       FirstAired: '',
+                       Network: '',
+                       IMDB_ID: '',
+                       id: 0 }];
+    socket.emit('TvShowResultList', tempArray, data.originname);
   });
 };
 
 //Bind Offline Online TvShow
 exports.bindOfflineOnlineTvShow = function(TvShowData,socket){
-  config.getMatchedTvShows(function(err,path){ 
+  config.getMatchedTvShows(function(err,path){
     fs.readFile(path, 'utf8', function (err, data) {
       if (err) {
         console.log('Error: ' + err);
@@ -89,10 +87,10 @@ exports.bindOfflineOnlineTvShow = function(TvShowData,socket){
         return;
       } else {
       data = JSON.parse(data);
-      
+
       //Check if TvShow already exists and delete if so
-      data.forEach(function(item) {  
-        
+      data.forEach(function(item) {
+
         if(item.originname == TvShowData.originname ){
           data.splice(data.indexOf(item),1);
           console.log(data);
@@ -128,7 +126,7 @@ exports.initLostEpisodesList = function(socket){
         //data = JSON.parse(data);
         matchedData.sort(sort_by('originname', true, function(a){return a.toUpperCase()}));
         matchedData.forEach(function (item){
-          socket.emit('initialLostEpisodesList', {originname:item.originname, seriesid:item.seriesid});     
+          socket.emit('initialLostEpisodesList', {originname:item.originname, seriesid:item.seriesid});
         });
       }
     });
@@ -139,40 +137,43 @@ exports.initLostEpisodesList = function(socket){
 exports.checkEpisodes = function(data,socket){
   var id = data.seriesid;
   var episodesOnline = []; // storing episodes while searching
-  
+
   console.log(id);
 
   //Check online for aired episodes
-  tvDB(key).getSeriesAllById(id,function(err, res) {
-    if (!err) {
-      res.Data.Episode.forEach(function (item){
-        var episodeString = '';
-        if (item.SeasonNumber < 10){
-          episodeString = 'S0'+ item.SeasonNumber;
-        }else{
-          episodeString = 'S'+ item.SeasonNumber;
-        }
-        if (item.EpisodeNumber < 10){
-          episodeString = episodeString + 'E0' + item.EpisodeNumber;
-        }else{
-          episodeString = episodeString + 'E' + item.EpisodeNumber;
-        }
-        //Exclude S00 Episodes
-        if(episodeString.indexOf('S00') === -1){
-          episodesOnline.push(episodeString);
-        }
-      });
+  tvDB.getEpisodesBySeriesId(id)
+      .then(res => {
+        console.log( res);
+        res.forEach(function (item){
+          var episodeString = '';
+          if (item.airedSeason < 10){
+            episodeString = 'S0'+ item.airedSeason;
+          }else{
+            episodeString = 'S'+ item.airedSeason;
+          }
+          if (item.airedEpisodeNumber < 10){
+            episodeString = episodeString + 'E0' + item.airedEpisodeNumber;
+          }else{
+            episodeString = episodeString + 'E' + item.airedEpisodeNumber;
+          }
+          //Exclude S00 Episodes
+          if(episodeString.indexOf('S00') === -1){
+            episodesOnline.push(episodeString);
+          }
+
+        });
+
 
       //Check offline episodes
       config.getTvShowPath(function(err, tvShowPath){
         walk(tvShowPath + data.originname + '/',function(err,episodesOffline){
           if(!err){
-            //console.log(episodesOffline);
+            console.log(episodesOffline);
 
             for (var i = 0; i < episodesOnline.length; i++){
-            //episodesOnline.forEach(function(itemOnline) {  
-        
-              episodesOffline.forEach(function(itemOffline){ 
+            //episodesOnline.forEach(function(itemOnline) {
+
+              episodesOffline.forEach(function(itemOffline){
 
                 if(itemOffline.toUpperCase().indexOf(episodesOnline[i])> -1){
                   console.log('Cut:' + episodesOnline[i]);
@@ -195,8 +196,9 @@ exports.checkEpisodes = function(data,socket){
           }
         });
       });
-    }
-  });
+
+  })
+  .catch(error => { console.log(error) });
 };
 
 //Recursiv through directory
@@ -249,12 +251,12 @@ var findEpisodes = function(tvShowName,episodesArray, cb) {
 
 //Sorting function
 var sort_by = function(field, reverse, primer){
-   var key = primer ? 
-       function(x) {return primer(x[field])} : 
+   var key = primer ?
+       function(x) {return primer(x[field])} :
        function(x) {return x[field]};
    reverse = [-1, 1][+!!reverse];
    return function (a, b) {
        return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
-    } 
+    }
 }
 
