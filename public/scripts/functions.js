@@ -54,10 +54,10 @@ function connect(){
   var ftpPass = document.getElementById('textPass').value;
   var ftpTls = document.getElementById('chkTls').checked;
 
-  socket.emit('connect', {ftpUrl: ftpUrl ,
-                          ftpPort: ftpPort, 
-                          ftpUser: ftpUser, 
-                          ftpPass: ftpPass, 
+  socket.emit('connec', {ftpUrl: ftpUrl ,
+                          ftpPort: ftpPort,
+                          ftpUser: ftpUser,
+                          ftpPass: ftpPass,
                           ftpTls: ftpTls });
 };
 
@@ -76,9 +76,9 @@ function saveFtp(){
   var ftpTls = document.getElementById('chkTls').checked;
 
   socket.emit('saveFtp', {ftpUrl: ftpUrl ,
-                          ftpPort: ftpPort, 
-                          ftpUser: ftpUser, 
-                          ftpPass: ftpPass, 
+                          ftpPort: ftpPort,
+                          ftpUser: ftpUser,
+                          ftpPass: ftpPass,
                           ftpTls: ftpTls });
 };
 
@@ -87,11 +87,11 @@ function saveConfig(){
   var pathTvShows = document.getElementById('textTvShowPath').value;
   var pathDownloads = document.getElementById('textDownloadPath').value;
   var downloadList = document.getElementById('textDownloadList').value;
-  var dumpFile = document.getElementById('textDumpFile').value;     
+  var dumpFile = document.getElementById('textDumpFile').value;
   var matchedTvShows = document.getElementById('textMatchedTvShows').value;
-  var scannerList = document.getElementById('textScannerList').value;  
-  var storedFtp = document.getElementById('textStoredFtp').value;  
-  var ignoreFromDownload = document.getElementById('textIgnoreFromDownload').value;  
+  var scannerList = document.getElementById('textScannerList').value;
+  var storedFtp = document.getElementById('textStoredFtp').value;
+  var ignoreFromDownload = document.getElementById('textIgnoreFromDownload').value;
 
   console.log('save');
   socket.emit('saveConfig', { pathTvShows: pathTvShows,
@@ -109,10 +109,10 @@ function saveConfig(){
 function initConfigFiles(){
 
   var downloadList = document.getElementById('textDownloadList').value;
-  var dumpFile = document.getElementById('textDumpFile').value;     
+  var dumpFile = document.getElementById('textDumpFile').value;
   var matchedTvShows = document.getElementById('textMatchedTvShows').value;
-  var scannerList = document.getElementById('textScannerList').value;  
-  var storedFtp = document.getElementById('textStoredFtp').value;  
+  var scannerList = document.getElementById('textScannerList').value;
+  var storedFtp = document.getElementById('textStoredFtp').value;
 
   console.log('Create config files');
   socket.emit('initConfigFiles', {downloadList : downloadList,
@@ -139,14 +139,14 @@ function fillData(data){
   if (data.dataset.ftptls === 'true'){
     document.getElementById('chkTls').checked = true;
   }
-  else{ 
+  else{
     document.getElementById('chkTls').checked = false;
   }
 };
 
 //Waiting for available servers
 socket.on('receiveStoredServers', function(data){
- 
+
   //console.log(data);
   Items= data;
   //Remove existing nodes to clear Dropdown
@@ -174,8 +174,10 @@ socket.on('receiveStoredServers', function(data){
   }
 });
 
-//Receiving Initial folder 
+//Receiving Initial folder
 socket.on('initialFolderFtp', function(data){
+
+  document.getElementById('indicatorWait').hidden = true;
 
   Items = data;
 
@@ -189,21 +191,21 @@ socket.on('initialFolderFtp', function(data){
   var div = document.createElement('div');
   div.setAttribute('class', 'glyphicon glyphicon-folder-open');
   div.innerHTML = div.innerHTML + ' ' + document.getElementById('textFtpUrl').value;
-  
-  var span = document.createElement('span');  
+
+  var span = document.createElement('span');
   span.setAttribute('onclick', 'checkSubfolders(this)');
   span.setAttribute('data-name', '/');
 
   span.appendChild(div);
-  
+
   li.appendChild(span);
   ul.appendChild(li);
-  document.getElementById('treeSection').appendChild(ul);  
+  document.getElementById('treeSection').appendChild(ul);
 });
 
 //Receiving Initial folder
 socket.on('setSubfolders', function(path,data){
-
+  document.getElementById('indicatorWait').hidden = true;
   Items = data;
   //console.log(data);
   for (var i = 0; i < Items.length; i++){
@@ -211,9 +213,9 @@ socket.on('setSubfolders', function(path,data){
     if (Items[i].type === 'd'|| Items[i].type ==='-'|| Items[i].type ==='l'){
       var ul = document.createElement('ul');
       var li = document.createElement('li');
-      var span = document.createElement('span'); 
-      var div = document.createElement('div'); 
-  
+      var span = document.createElement('span');
+      var div = document.createElement('div');
+
       li.setAttribute('id', path + '/' +  Items[i].name);
 
       if (Items[i].type === 'd'){
@@ -236,7 +238,7 @@ socket.on('setSubfolders', function(path,data){
       li.appendChild(span);
 
       ul.appendChild(li);
-    
+
       document.getElementById(path).appendChild(ul);
     }
   }
@@ -268,7 +270,7 @@ socket.on('updateDownloadList', function(data){
     li.setAttribute('ondragstart', 'drag(event)');
     li.innerHTML = li.innerHTML + ' ' + item.path;
 
-    root.appendChild(li);  
+    root.appendChild(li);
   });
 });
 
@@ -280,6 +282,7 @@ function checkSubfolders(data){
   var sort = document.getElementById('chkSorted').checked;
   //If one ask ftp for subfolders
   if (childs.length <= 2){
+    document.getElementById('indicatorWait').hidden = false;
     socket.emit('list',data.dataset.name,sort);
   }else{
     //hide or show subfolders
@@ -308,7 +311,7 @@ function dropDownload(ev){
   console.log('init');
   ev.preventDefault();
   var data = ev.dataTransfer.getData("Text");
-  
+
   var source = document.getElementById(data);
 
   console.log('Source: ' + source);
@@ -345,7 +348,7 @@ function dropTrash(ev){
 function dropScanner(ev){
   ev.preventDefault();
   var data = ev.dataTransfer.getData("Text");
-  
+
   var source = document.getElementById(data);
   var ftpUrl = document.getElementById('textFtpUrl').value;
   var ftpUser = document.getElementById('textUser').value;
@@ -377,7 +380,7 @@ function allowDrop(ev){
   ev.preventDefault();
 }
 
-//Showing Paths to scan 
+//Showing Paths to scan
 socket.on('initialScannerFolder', function(data){
 
   Items = data;
@@ -390,18 +393,18 @@ socket.on('initialScannerFolder', function(data){
     var div = document.createElement('div');
     div.setAttribute('class', 'glyphicon glyphicon-folder-open');
     div.innerHTML = div.innerHTML + ' ' + Items[i].path;
-    
-    var span = document.createElement('span'); 
+
+    var span = document.createElement('span');
 
     span.appendChild(div);
-    
+
     li.appendChild(span);
     ul.appendChild(li);
   }
-  document.getElementById('treeScanPaths').appendChild(ul);  
+  document.getElementById('treeScanPaths').appendChild(ul);
 });
 
-//Showing results of scan 
+//Showing results of scan
 socket.on('initialScannerResultList', function(data){
   var Result = document.getElementById('treeScanResults');
   while (Result.firstChild) {
@@ -410,8 +413,8 @@ socket.on('initialScannerResultList', function(data){
   var div = document.createElement('div');
   div.setAttribute('class', 'wordwrap');
   div.innerHTML = data;
-  
-  Result.appendChild(div);  
+
+  Result.appendChild(div);
 });
 
 //Start scanning of FTP
@@ -423,9 +426,9 @@ function scanFtp(){
   var ftpTls = document.getElementById('chkTls').checked;
 
   socket.emit('scanFtp', {ftpUrl: ftpUrl ,
-                          ftpPort: ftpPort, 
-                          ftpUser: ftpUser, 
-                          ftpPass: ftpPass, 
+                          ftpPort: ftpPort,
+                          ftpUser: ftpUser,
+                          ftpPass: ftpPass,
                           ftpTls: ftpTls });
 }
 
@@ -445,24 +448,24 @@ socket.on('initialTvShowResultList', function(data){
   div.setAttribute('ondragover','allowDrop(event)');
   div.setAttribute('id',  originname);
   div.innerHTML = div.innerHTML + ' ' + data;
-  
-  var span = document.createElement('span'); 
+
+  var span = document.createElement('span');
 
   span.appendChild(div);
-  
+
   li.appendChild(span);
-  document.getElementById('TvShowTreeList').appendChild(li);  
+  document.getElementById('TvShowTreeList').appendChild(li);
 });
 
 //Check Tv Show on TheTvDb
 function checkTvShow(data){
-  
+
   if (data !== 'manual'){
     socket.emit('checkTvShow', {name: data.dataset.name , originname: data.dataset.originname });
   }else{
     //console.log('manual');
     var passOn = document.getElementById('textManualTvShowInput');
-    
+
     socket.emit('checkTvShow', {name: passOn.value , originname: passOn.dataset.originname });
   }
   //console.log(data.dataset.originName)
@@ -473,41 +476,40 @@ socket.on('TvShowResultList', function(data, originname){
   var root = document.getElementById('TvShowResultTree');
   root.innerHTML = '';
   if (data[0].SeriesName !== 'not found'){
-    
+
     var ul = document.createElement('ul');
     //console.log(data.length);
     for(i=0; i < data.length; i++){
     //data.forEach(function (item){
+      console.log(data[i]);
       var li = document.createElement('li');
 
       var div = document.createElement('div');
       div.setAttribute('draggable', 'true');
       div.setAttribute('ondragstart', 'drag(event)');
       div.setAttribute('data-originName', originname);
-      div.setAttribute('data-seriesid', data[i].seriesid);
-      div.setAttribute('data-language', data[i].language);
-      div.setAttribute('data-SeriesName',data[i]. SeriesName);
+      div.setAttribute('data-seriesid', data[i].id);
+      div.setAttribute('data-SeriesName',data[i].seriesName);
       div.setAttribute('data-banner', data[i].banner);
-      div.setAttribute('data-FirstAired', data[i].FirstAired);
-      div.setAttribute('data-Network', data[i].Network);
-      div.setAttribute('data-IMDB_ID', data[i].IMDB_ID);
+      div.setAttribute('data-FirstAired', data[i].firstAired);
+      div.setAttribute('data-Network', data[i].network);
       div.setAttribute('data-id', data[i].id);
-      div.setAttribute('data-Overview', data[i].Overview);
-      div.setAttribute('title', 'First aired: ' + data[i].FirstAired + '\r' + 'Overview: ' + data[i].Overview);
-      div.setAttribute('id',  data[i].seriesid);
-      div.innerHTML = div.innerHTML + ' ' + data[i].SeriesName;
-      
-      var span = document.createElement('span'); 
+      div.setAttribute('data-Overview', data[i].overview);
+      div.setAttribute('title', 'First aired: ' + data[i].firstAired + '\r' + 'Overview: ' + data[i].overview);
+      div.setAttribute('id',  data[i].id);
+      div.innerHTML = div.innerHTML + ' ' + data[i].seriesName;
+
+      var span = document.createElement('span');
 
       span.appendChild(div);
-      
+
       li.appendChild(span);
 
       ul.appendChild(li);
     }
 
     //document.getElementById('TvShowResultTree').removeChild(0);
-    root.appendChild(ul);  
+    root.appendChild(ul);
     addManualSearch(originname);
   }else{
     addManualSearch(originname);
@@ -538,14 +540,14 @@ function addManualSearch(originname){
 //Drop finished for Tv Show off/online match
 function dropTvShowMatch(ev){
   //console.log('Match');
-  
+
   ev.preventDefault();
   var data = ev.dataTransfer.getData("Text");
   //console.log(data);
-  
+
   var source = document.getElementById(data);
   //onsole.log(source.dataset.originname);
-  
+
   // Send Type and ftp path to WebServer
   socket.emit('bindOfflineOnlineTvShow', {originname: source.dataset.originname,
                                           seriesid: source.dataset.seriesid
@@ -554,7 +556,7 @@ function dropTvShowMatch(ev){
 
 //Mark Matched TvShow
 socket.on('markMatchedTvShow', function(data){
-  
+  console.log(data);
   var div = document.getElementById(data);
   div.parentNode.style.backgroundColor = 'green';
   //console.log(div);
@@ -575,13 +577,13 @@ socket.on('initialLostEpisodesList', function(data){
   div.setAttribute('data-seriesid',  data.seriesid);
   div.setAttribute('id',  originname);
   div.innerHTML = div.innerHTML + ' ' + name;
-  
-  var span = document.createElement('span'); 
+
+  var span = document.createElement('span');
 
   span.appendChild(div);
-  
+
   li.appendChild(span);
-  document.getElementById('TvShowTreeList').appendChild(li);  
+  document.getElementById('TvShowTreeList').appendChild(li);
 });
 
 //Check Tv Show on TheTvDb
@@ -604,13 +606,13 @@ socket.on('lostEpisodes', function(data){
       var li = document.createElement('li');
       var div = document.createElement('div');
       div.innerHTML = div.innerHTML + ' ' + data[i];
-      var span = document.createElement('span'); 
-      span.appendChild(div);     
+      var span = document.createElement('span');
+      span.appendChild(div);
       li.appendChild(span);
       ul.appendChild(li);
     }
     //document.getElementById('TvShowResultTree').removeChild(0);
-    root.appendChild(ul);  
+    root.appendChild(ul);
 });
 
 //Receiving founded episodes
@@ -624,7 +626,7 @@ socket.on('foundedEpisode', function(data){
   li.setAttribute('id', data);
   li.innerHTML = li.innerHTML + ' ' + data;
 
-  root.appendChild(li);  
+  root.appendChild(li);
 });
 
 // Triggers to download the Download List of the server
@@ -656,6 +658,10 @@ socket.on('indicator', function(data){
   document.getElementById(data.type).hidden = data.hidden;
 });
 
+socket.on('Wait',function(){
+  document.getElementById('indicatorWait').hidden = false;
+  console.log('Wait');
+});
 
 //Updating Couter for folders to scan
 socket.on('scanFolderCounter', function(data){
